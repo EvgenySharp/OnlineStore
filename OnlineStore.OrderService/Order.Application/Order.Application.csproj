@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ShoppingCart.Domain\ShoppingCart.Domain.csproj" />
+    <ProjectReference Include="..\..\OnlineStore.СatalogService\Catalog.Domain\Catalog.Domain.csproj" />
   </ItemGroup>
 
 </Project>
