@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Auth.Persistence
+﻿namespace Auth.Persistence
 {
-    internal class DbInitializer
+    public class DbInitializer
     {
+        public static void Initialize(AuthDbContext context)
+        {
+            context.Database.EnsureCreated();
+        }
     }
 }
