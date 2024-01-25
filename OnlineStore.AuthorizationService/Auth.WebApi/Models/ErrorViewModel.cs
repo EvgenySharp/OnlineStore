@@ -1,4 +1,4 @@
-namespace Auth.WebApi.Models
+﻿namespace Auth.WebApi.Models
 {
     public class ErrorViewModel
     {

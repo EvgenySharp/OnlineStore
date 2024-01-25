@@ -19,6 +19,8 @@ namespace Auth.WebApi
 
             var connectionString = configuration.GetValue<string>("DbConnection");
 
+            services.AddMvc(options => options.EnableEndpointRouting = false);
+
             services.AddDbContext<AuthDbContext>(options =>
             {
                 options.UseSqlite(connectionString);
@@ -53,6 +55,8 @@ namespace Auth.WebApi
 
             var app = builder.Build();
 
+            app.UseMvc(routes => { routes.MapRoute(name: "default", template: "{controller=Auth}/{action=Login}"); });
+
             using (var scope = app.Services.CreateScope())
             {
                 var serviceProvider = scope.ServiceProvider;
@@ -82,10 +86,10 @@ namespace Auth.WebApi
 
             app.UseAuthorization();
             app.UseIdentityServer();
-            app.MapControllerRoute(
-                name: "default",
-                pattern: "{controller=Home}/{action=Index}/{id?}");
-
+            app.UseEndpoints(endpoint =>
+            {
+                endpoint.MapDefaultControllerRoute();
+            });
             app.Run();
         }
     }
