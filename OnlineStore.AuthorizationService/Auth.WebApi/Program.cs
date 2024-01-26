@@ -26,7 +26,7 @@ namespace Auth.WebApi
                 options.UseSqlite(connectionString);
             });
 
-            services.AddIdentity<AppUser, IdentityRole>(config =>
+            services.AddIdentity<User, IdentityRole>(config =>
             {
                 config.Password.RequiredLength = 4;
                 config.Password.RequireDigit = false;
@@ -37,7 +37,7 @@ namespace Auth.WebApi
                 .AddDefaultTokenProviders();
 
             services.AddIdentityServer()
-                .AddAspNetIdentity<AppUser>()
+                .AddAspNetIdentity<User>()
                 .AddInMemoryApiResources(new List<ApiResource>())
                 .AddInMemoryIdentityResources(new List<IdentityResource>())
                 .AddInMemoryApiScopes(new List<ApiScope>())

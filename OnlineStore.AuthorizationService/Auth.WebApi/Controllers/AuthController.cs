@@ -8,12 +8,12 @@ namespace Auth.WebApi.Controllers
 {
     public class AuthController : Controller
     {
-        private readonly SignInManager<AppUser> _signInManager;
-        private readonly UserManager<AppUser> _userManager;
+        private readonly SignInManager<User> _signInManager;
+        private readonly UserManager<User> _userManager;
         private readonly IIdentityServerInteractionService _interactionService;
 
-        public AuthController(SignInManager<AppUser> signInManager,
-            UserManager<AppUser> userManager,
+        public AuthController(SignInManager<User> signInManager,
+            UserManager<User> userManager,
             IIdentityServerInteractionService interactionService)
         {
             _signInManager = signInManager;
@@ -80,7 +80,7 @@ namespace Auth.WebApi.Controllers
                 return View(viewModel);
             }
 
-            var user = new AppUser 
+            var user = new User 
             { 
                 UserName = viewModel.Username 
             };

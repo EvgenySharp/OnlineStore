@@ -2,7 +2,7 @@
 
 namespace Auth.Persistence.Entity
 {
-    public class AppUser : IdentityUser
+    public class User : IdentityUser
     {
     }
 }
