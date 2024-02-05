@@ -1,8 +1,15 @@
-using Auth.Persistence;
-using Auth.Persistence.Entity;
-using IdentityServer4.Models;
+using Auth.BuisnessLayer.Abstractions.Interfaces;
+using Auth.BuisnessLayer.Services;
+using Auth.DataAccessLayer;
+using Auth.DataAccessLayer.Entity;
+using FluentValidation.AspNetCore;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Auth.BuisnessLayer.Extensions;
+using Auth.WebApi.Middlewares;
+using Microsoft.Extensions.Logging.ApplicationInsights;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Auth.WebApi
 {
@@ -14,17 +21,9 @@ namespace Auth.WebApi
 
             var services = builder.Services;
 
-            var provider = services.BuildServiceProvider();
-            var configuration = provider.GetService<IConfiguration>();
-
-            var connectionString = configuration.GetValue<string>("DbConnection");
-
-            services.AddMvc(options => options.EnableEndpointRouting = false);
-
+            var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
             services.AddDbContext<AuthDbContext>(options =>
-            {
-                options.UseSqlite(connectionString);
-            });
+                options.UseSqlServer(connectionString, dbContext => dbContext.MigrationsAssembly("Auth.DataAccessLayer")));
 
             services.AddIdentity<User, IdentityRole>(config =>
             {
@@ -34,62 +33,53 @@ namespace Auth.WebApi
                 config.Password.RequireUppercase = false;
             })
                 .AddEntityFrameworkStores<AuthDbContext>()
+                .AddRoles<IdentityRole>()
                 .AddDefaultTokenProviders();
 
-            services.AddIdentityServer()
-                .AddAspNetIdentity<User>()
-                .AddInMemoryApiResources(new List<ApiResource>())
-                .AddInMemoryIdentityResources(new List<IdentityResource>())
-                .AddInMemoryApiScopes(new List<ApiScope>())
-                .AddInMemoryClients(new List<Client>())
-                .AddDeveloperSigningCredential();
+            builder.Logging.AddFilter<ApplicationInsightsLoggerProvider>("your-category", LogLevel.Trace);
 
-            services.ConfigureApplicationCookie(config =>
+            services.AddScoped<ExceptionHandlerMiddleware>();
+
+            services.AddScoped<IAccountService, AccountService>();
+
+            services.AddAuthentication(options =>
             {
-                config.Cookie.Name = "OnlineStore.Identity.Cookie";
-                config.LoginPath = "/Auth/Login";
-                config.LogoutPath = "/Auth/Logout";
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
             });
 
-            services.AddControllersWithViews();
+            services.AddSwaggerGen();
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
+            services.AddControllers();
+
+
+            builder.Services.AddMvc(options =>
+            {
+                options.Filters.Add(typeof(RequestDataValidationAttribute));
+            });
+
+            services.Configure<ApiBehaviorOptions>(options =>
+            {
+                options.SuppressModelStateInvalidFilter = true;
+            });
+
+            services.AddValidatorsConfiguration();
+            services.AddFluentValidationAutoValidation();
 
             var app = builder.Build();
 
-            app.UseMvc(routes => { routes.MapRoute(name: "default", template: "{controller=Auth}/{action=Login}"); });
-
-            using (var scope = app.Services.CreateScope())
-            {
-                var serviceProvider = scope.ServiceProvider;
-                try
-                {
-                    var context = serviceProvider.GetRequiredService<AuthDbContext>();
-                    DbInitializer.Initialize(context);
-                }
-                catch (Exception exception)
-                {
-                    // TODO logger
-                }
-            }
-
-            // Configure the HTTP request pipeline.
-            if (!app.Environment.IsDevelopment())
-            {
-                app.UseExceptionHandler("/Home/Error");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-                app.UseHsts();
-            }
+            app.UseSwagger();
+            app.UseSwaggerUI();
 
             app.UseHttpsRedirection();
-            app.UseStaticFiles();
-
-            app.UseRouting();
-
             app.UseAuthorization();
-            app.UseIdentityServer();
-            app.UseEndpoints(endpoint =>
-            {
-                endpoint.MapDefaultControllerRoute();
-            });
+
+            app.UseMiddleware<ExceptionHandlerMiddleware>();
+
+            app.MapControllers();
+
             app.Run();
         }
     }

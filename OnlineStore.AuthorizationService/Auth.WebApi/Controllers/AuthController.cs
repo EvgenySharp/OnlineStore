@@ -1,109 +1,64 @@
-﻿using Auth.Persistence.Entity;
-using Auth.WebApi.Models;
-using IdentityServer4.Services;
-using Microsoft.AspNetCore.Identity;
+﻿using Auth.BuisnessLayer.Abstractions.Interfaces;
+using Auth.BuisnessLayer.DTOs.RequestDTOs;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Auth.WebApi.Controllers
 {
-    public class AuthController : Controller
+    [Route("api")]
+    public class AuthController : ControllerBase
     {
-        private readonly SignInManager<User> _signInManager;
-        private readonly UserManager<User> _userManager;
-        private readonly IIdentityServerInteractionService _interactionService;
-
-        public AuthController(SignInManager<User> signInManager,
-            UserManager<User> userManager,
-            IIdentityServerInteractionService interactionService)
+        private readonly IAccountService _accountServices;
+        public AuthController(IAccountService accountServices)
         {
-            _signInManager = signInManager;
-            _userManager = userManager;
-            _interactionService = interactionService;
+            _accountServices = accountServices;
         }
 
+        /// <summary>
+        /// Login user
+        /// </summary>
+        /// <remarks>
+        /// Sample request:
+        /// Get /api/login?UserName=Evgeny&password=4454
+        /// </remarks>
+        /// <param name="LoginUserRequestDto">LoginUserRequestDto object</param>
+        /// <returns>Login user (LoginUserRequestDto)</returns>
+        /// <response code="200">Success</response>
+        /// <response code="404">The user was not found</response>
+        /// <response code="409">The user's authorization failed with an error</response>
         [HttpGet]
-        public IActionResult Login(string returnUrl = "<URL>")
+        [Route("login")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status409Conflict)]
+        public async Task<IActionResult> LoginАsync(LoginUserRequestDto loginRequestDto, CancellationToken cancellationToken)
         {
-            var viewModel = new LoginViewModel
-            {
-                ReturnUrl = returnUrl
-            };
+            var user = await _accountServices.LoginUserAsync(loginRequestDto, cancellationToken);
 
-            return View(viewModel);
+            return Ok(user);            
         }
 
-        [HttpPost]
-        public async Task<IActionResult> Login(LoginViewModel viewModel)
-        {
-            if (!ModelState.IsValid)
-            {
-                return View(viewModel);
-            }
-
-            var user = await _userManager.FindByNameAsync(viewModel.Username);
-
-            if (user == null)
-            {
-                ModelState.AddModelError(string.Empty, "User not found");
-                return View(viewModel);
-            }
-
-            var result = await _signInManager
-                .PasswordSignInAsync(viewModel.Username, viewModel.Password, false, false);
-
-            if (result.Succeeded)
-            {
-                return Redirect(viewModel.ReturnUrl);
-            }
-
-            ModelState.AddModelError(string.Empty, "Login error");
-
-            return View(viewModel);
-        }
-
+        /// <summary>
+        /// Register user
+        /// </summary>
+        /// <remarks>
+        /// Sample request:
+        /// Get /api/register?UserName=Evgeny&Password=4454&ConfirmPassword=4454
+        /// </remarks>
+        /// <param name="RegisterUserRequestDto">RegisterUserRequestDto object</param>
+        /// <returns>Register user (RegisterUserRequestDto)</returns>
+        /// <response code="200">Success</response>
+        /// <response code="400">User Failed to create</response>
+        /// <response code="409">User with this login already exists</response>
         [HttpGet]
-        public IActionResult Register(string returnUrl = "<URL>")
+        [Route("register")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status409Conflict)]        
+        public async Task<IActionResult> RegisterАsync(RegisterUserRequestDto redisterRequestDto, CancellationToken cancellationToken)
         {
-            var viewModel = new RegisterViewModel
-            {
-                ReturnUrl = returnUrl
-            };
+            var createdUser = await _accountServices.RegisterUserAsync(redisterRequestDto, cancellationToken);
 
-            return View(viewModel);
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> Register(RegisterViewModel viewModel)
-        {
-            if (!ModelState.IsValid)
-            {
-                return View(viewModel);
-            }
-
-            var user = new User 
-            { 
-                UserName = viewModel.Username 
-            };
-            var result = await _userManager.CreateAsync(user, viewModel.Password);
-
-            if (result.Succeeded)
-            {
-                await _signInManager.SignInAsync(user, false);
-                return Redirect(viewModel.ReturnUrl);
-            }
-
-            ModelState.AddModelError(string.Empty, "Error occurred");
-
-            return View(viewModel);
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> Logout(string logoutId)
-        {
-            await _signInManager.SignOutAsync();
-            var logoutRequest = await _interactionService.GetLogoutContextAsync(logoutId);
-
-            return Redirect(logoutRequest.PostLogoutRedirectUri);
+            return Ok(createdUser);
         }
     }
 }
