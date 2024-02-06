@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Auth.WebApi
+namespace Auth.BuisnessLayer.Validation
 {
     public class RequestDataValidationAttribute : ActionFilterAttribute
     {

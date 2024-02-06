@@ -2,7 +2,7 @@
 
 namespace Auth.BuisnessLayer.DTOs.ResponseDTOs
 {
-    public class UpdateUserResponseDto
+    public class СhangePasswordResponseDto
     {
         public string Name { get; set; }
         public Roles UserRole { get; set; }

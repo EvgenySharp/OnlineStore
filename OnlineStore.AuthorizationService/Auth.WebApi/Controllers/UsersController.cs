@@ -4,12 +4,12 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Auth.WebApi.Controllers
 {
-    [Route("api")]
-    public class UserController : ControllerBase
+    [Route("api/[controller]")]
+    public class UsersController : ControllerBase
     {
         private readonly IAccountService _accountServices;
 
-        public UserController(IAccountService accountServices)
+        public UsersController(IAccountService accountServices)
         {
             _accountServices = accountServices;
         }
@@ -19,18 +19,21 @@ namespace Auth.WebApi.Controllers
         /// </summary>
         /// <remarks>
         /// Sample request:
-        /// GET /api/User/GetAll
+        /// Post /api/Users
+        /// {
+        ///     pageSize: 10,
+        ///     pageCount: 1
+        /// }
         /// </remarks>
-        /// <returns>ListOfUser (<IEnumerable<GetUserResponseDto>>)</returns>
+        /// <returns>PageOfUser (UsersPageResponseDto)</returns>
         /// <response code="200">Success</response>
-        [HttpGet]
-        [Route("users")]
+        [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetAll(CancellationToken cancellationToken)
+        public async Task<IActionResult> GetAllAsync([FromBody] GetUserRequestDto getUserRequestDto, CancellationToken cancellationToken)
         {
-            var listOfUser = await _accountServices.GetAllUserAsync(cancellationToken);
+            var usersPage = await _accountServices.GetAllUserAsync(getUserRequestDto, cancellationToken);
 
-            return Ok(listOfUser);
+            return Ok(usersPage);
         }
 
         /// <summary>
@@ -38,17 +41,17 @@ namespace Auth.WebApi.Controllers
         /// </summary>
         /// <remarks>
         /// Sample request:
-        /// GET /api/User/GetById?id=08be1a02-c955-4451-8cab-5e87462f3ded
+        /// GET /api/Users/46b5821f-944d-48db-87f4-4664039ffb6c
         /// </remarks>
         /// <param name="id">Guid object</param>
         /// <returns>User (GetUserResponseDto)</returns>
         /// <response code="200">Success</response>
         /// <response code="404">The user was not found</response>
         [HttpGet]
-        [Route("user/{Id}")]
+        [Route("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> GetUserById(Guid id, CancellationToken cancellationToken)
+        public async Task<IActionResult> GetUserByIdAsync(Guid id, CancellationToken cancellationToken)
         {
             var user = await _accountServices.GetUserByIdAsync(id, cancellationToken);
 
@@ -56,30 +59,29 @@ namespace Auth.WebApi.Controllers
         }
 
         /// <summary>
-        /// Update the user
+        /// Change the user's password
         /// </summary>
         /// <remarks>
         /// Sample request:
-        /// PUT /api/User/updatePassword
+        /// PUT /api/Users
         /// {
         ///     "Name": "Evgeny",
         ///     "CurrentPassword": "4454",
         ///     "NewPassword": "5483"
         /// }
         /// </remarks>
-        /// <param name="updateUserRequestDto">UpdateUserRequestDto object</param>
+        /// <param name="changePasswordRequestDto">СhangePasswordRequestDto object</param>
         /// <returns>Returns NoContent</returns>
         /// <response code="204">Success</response>
         /// <response code="400">User Failed to update</response>
         /// <response code="404">The user was not found</response>
         [HttpPut]
-        [Route("user")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> UpdatePassword([FromBody] UpdateUserRequestDto updateUserRequestDto, CancellationToken cancellationToken)
+        public async Task<IActionResult> СhangePasswordAsync([FromBody] СhangePasswordRequestDto changePasswordRequestDto, CancellationToken cancellationToken)
         {
-            await _accountServices.UpdatePasswordAsync(updateUserRequestDto, cancellationToken);
+            await _accountServices.СhangePasswordAsync(changePasswordRequestDto, cancellationToken);
 
             return NoContent();
         }
@@ -89,7 +91,7 @@ namespace Auth.WebApi.Controllers
         /// </summary>
         /// <remarks>
         /// Sample request:
-        /// DELETE /api/User/Delete?id=773b2323-7205-481a-84ae-a7e96826beff
+        /// DELETE /api/Users/46b5821f-944d-48db-87f4-4664039ffb6c
         /// </remarks>
         /// <param name="id">Guid object</param>
         /// <returns>Returns NoContent</returns>
@@ -97,11 +99,11 @@ namespace Auth.WebApi.Controllers
         /// <response code="400">User Failed to delete</response>
         /// <response code="404">The user was not found</response>
         [HttpDelete]
-        [Route("user/{Id}")]
+        [Route("{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> Delete(Guid id, CancellationToken cancellationToken)
+        public async Task<IActionResult> DeleteAsync(Guid id, CancellationToken cancellationToken)
         {
             await _accountServices.DeleteUserByIdAsync(id, cancellationToken);
 

@@ -1,11 +1,11 @@
 ﻿using Auth.BuisnessLayer.DTOs.RequestDTOs;
 using FluentValidation;
 
-namespace Auth.BuisnessLayer.Validatiors
+namespace Auth.BuisnessLayer.Validation.ValidationRules
 {
     public class RoleRequestDtoValidator : AbstractValidator<RoleRequestDto>
     {
-        public RoleRequestDtoValidator() 
+        public RoleRequestDtoValidator()
         {
             RuleFor(role => role.Name)
                 .NotEmpty().MaximumLength(128);

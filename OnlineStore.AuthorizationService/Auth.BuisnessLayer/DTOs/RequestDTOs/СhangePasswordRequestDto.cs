@@ -1,6 +1,6 @@
 ﻿namespace Auth.BuisnessLayer.DTOs.RequestDTOs
 {
-    public class UpdateUserRequestDto
+    public class СhangePasswordRequestDto
     {
         public string Name { get; set; }
         public string CurrentPassword { get; set; }

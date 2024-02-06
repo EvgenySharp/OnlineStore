@@ -1,7 +1,6 @@
-﻿using FluentValidation;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using System.Text.Json;
-using AuthApplicationException = Auth.BuisnessLayer.Abstractions.Сlasses.AuthApplicationException;
+using Auth.BuisnessLayer.Abstractions.Сlasses;
 
 namespace Auth.WebApi.Middlewares
 {
@@ -56,8 +55,6 @@ namespace Auth.WebApi.Middlewares
             _logger.LogError(exception, message);
 
             await context.Response.WriteAsync(exceptionRsult);
-
-            return;
         }
     }
 }

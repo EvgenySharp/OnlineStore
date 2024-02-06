@@ -1,7 +1,7 @@
 ﻿using Auth.BuisnessLayer.DTOs.RequestDTOs;
 using FluentValidation;
 
-namespace Auth.BuisnessLayer.Validatiors
+namespace Auth.BuisnessLayer.Validation.ValidationRules
 {
     public class LoginUserRequestDtoValidator : AbstractValidator<LoginUserRequestDto>
     {

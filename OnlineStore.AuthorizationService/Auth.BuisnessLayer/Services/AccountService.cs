@@ -13,17 +13,19 @@ namespace Auth.BuisnessLayer.Services
     public class AccountService : IAccountService
     {
         private readonly UserManager<User> _userManager;
-        private readonly RoleManager<IdentityRole> _roleManager;
         private readonly SignInManager<User> _signInManager;
-        private readonly TokenService _tokenService;
+        private readonly ITokenService _tokenService;
         private readonly IMapper _mapper;
 
-        public AccountService(UserManager<User> userManager, RoleManager<IdentityRole> roleManager, SignInManager<User> signInManager, IMapper mapper)
+        public AccountService(
+            UserManager<User> userManager, 
+            SignInManager<User> signInManager, 
+            ITokenService tokenService, 
+            IMapper mapper)
         {
             _userManager = userManager;
-            _roleManager = roleManager;
             _signInManager = signInManager;
-            _tokenService = new TokenService();
+            _tokenService = tokenService;
             _mapper = mapper;
         }
 
@@ -45,7 +47,7 @@ namespace Auth.BuisnessLayer.Services
 
             var loginUserResponseDto = _mapper.Map<LoginUserResponseDto>(userEntity);
 
-            await _tokenService.SetJwtTokenAsync(loginUserResponseDto, cancellationToken);
+            _tokenService.SetJwtToken(loginUserResponseDto, cancellationToken);
             
             return loginUserResponseDto;
         }
@@ -74,17 +76,17 @@ namespace Auth.BuisnessLayer.Services
             return userResponseDto;
         }
         
-        public async Task<IEnumerable<GetUserResponseDto>> GetAllUserAsync(CancellationToken cancellationToken)
+        public async Task<UsersPageResponseDto> GetAllUserAsync(GetUserRequestDto getUserRequestDto, CancellationToken cancellationToken)
         {
-            var usersList = await _userManager.Users.ToListAsync();
-            var getUserResponseDtoList = new List<GetUserResponseDto>();
-            
-            foreach (var user in usersList) 
-            {
-                getUserResponseDtoList.Add(_mapper.Map<GetUserResponseDto>(user));
-            }
+            var users = await _userManager.Users
+                .Skip(getUserRequestDto.PageSize * (getUserRequestDto.PageCount-1))
+                .Take(getUserRequestDto.PageSize)
+                .OrderByDescending(u  => u.UserName)
+                .ToListAsync();
 
-            return getUserResponseDtoList;
+            var useesPage = GetUsersPage(getUserRequestDto, users);
+
+            return useesPage;
         }
 
         public async Task<GetUserResponseDto> GetUserByIdAsync(Guid id, CancellationToken cancellationToken)
@@ -101,23 +103,21 @@ namespace Auth.BuisnessLayer.Services
             return getUserResponseDto;
         }
 
-        public async Task UpdatePasswordAsync(UpdateUserRequestDto updateUserRequestDto, CancellationToken cancellationToken)
+        public async Task СhangePasswordAsync(СhangePasswordRequestDto changePasswordRequestDto, CancellationToken cancellationToken)
         {
-            var foundUser = await _userManager.FindByNameAsync(updateUserRequestDto.Name);
+            var foundUser = await _userManager.FindByNameAsync(changePasswordRequestDto.Name);
             
             if (foundUser is null)
             {
                 throw new UserNotFoundException();
             }
 
-            var userChangeResult = await _userManager.ChangePasswordAsync(foundUser, updateUserRequestDto.CurrentPassword, updateUserRequestDto.NewPassword);
+            var userChangeResult = await _userManager.ChangePasswordAsync(foundUser, changePasswordRequestDto.CurrentPassword, changePasswordRequestDto.NewPassword);
 
             if (!userChangeResult.Succeeded)
             {
                 throw new UserUpdateException();
             }
-
-            return;
         }
 
         public async Task DeleteUserByIdAsync(Guid id, CancellationToken cancellationToken)
@@ -135,77 +135,19 @@ namespace Auth.BuisnessLayer.Services
             {
                 throw new UserDeleteException();
             }
-
-            return;
         }
 
-        public async Task<RoleResponseDto> СreateRoleAsync(RoleRequestDto roleRequestDto, CancellationToken cancellationToken)
+        private UsersPageResponseDto GetUsersPage(GetUserRequestDto getUserRequestDto, IEnumerable<User> users)
         {
-            //var s = (Roles)roleRequestDto;
-            var foundRole = await _roleManager.FindByNameAsync(roleRequestDto.Name);
-
-            if (foundRole is not null)
+            var usersPage = new UsersPageResponseDto
             {
-                throw new RoleAlreadyExistsException();
-            }
+                Users = _mapper.Map<List<GetUserResponseDto>>(users),
+                PageCount = getUserRequestDto.PageCount,
+                PageSize = getUserRequestDto.PageSize,
+                TotalUsersCount = _userManager.Users.Count()
+            };
 
-            var newRole = _mapper.Map<Role>(roleRequestDto);
-            var roleCreationResult = await _roleManager.CreateAsync(newRole);
-
-            if (!roleCreationResult.Succeeded)
-            {
-                throw new RoleCreationException();
-            }
-
-            var roleResponseDto = _mapper.Map<RoleResponseDto>(newRole);
-
-            return roleResponseDto;
-        }
-
-        public async Task<IEnumerable<RoleResponseDto>> GetAllRoleAsync(CancellationToken cancellationToken)
-        {
-            var rolesList = await _roleManager.Roles.ToListAsync();
-            var roleResponseDtoList = new List<RoleResponseDto>();
-
-            foreach (var role in rolesList)
-            {
-                roleResponseDtoList.Add(_mapper.Map<RoleResponseDto>(role));
-            }
-
-            return roleResponseDtoList;
-        }
-
-        public async Task<RoleResponseDto> GetRoleByNameAsync(RoleRequestDto roleRequestDto, CancellationToken cancellationToken)
-        {
-            var foundRole = await _roleManager.FindByNameAsync(roleRequestDto.Name);
-
-            if (foundRole is null)
-            {
-                throw new RoleNotFoundException();
-            }
-
-            var roleResponseDto = _mapper.Map<RoleResponseDto>(foundRole);
-
-            return roleResponseDto;
-        }
-
-        public async Task DeleteRoleByNameAsync(RoleRequestDto roleRequestDto, CancellationToken cancellationToken)
-        {
-            var foundRole = await _roleManager.FindByNameAsync(roleRequestDto.Name);
-
-            if (foundRole is null)
-            {
-                throw new RoleNotFoundException();
-            }
-
-            var roleDeleteResult = await _roleManager.DeleteAsync(foundRole);
-
-            if (!roleDeleteResult.Succeeded)
-            {
-                throw new UserDeleteException();
-            }
-
-            return;
+            return usersPage;
         }
     }
 }

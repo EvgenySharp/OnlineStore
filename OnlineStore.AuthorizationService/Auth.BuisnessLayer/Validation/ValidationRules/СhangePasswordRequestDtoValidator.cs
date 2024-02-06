@@ -1,11 +1,11 @@
 ﻿using Auth.BuisnessLayer.DTOs.RequestDTOs;
 using FluentValidation;
 
-namespace Auth.BuisnessLayer.Validatiors
+namespace Auth.BuisnessLayer.Validation.ValidationRules
 {
-    public class UpdateUserRequestDtoValidator : AbstractValidator<UpdateUserRequestDto>
+    public class СhangePasswordRequestDtoValidator : AbstractValidator<СhangePasswordRequestDto>
     {
-        public UpdateUserRequestDtoValidator()
+        public СhangePasswordRequestDtoValidator()
         {
             RuleFor(user => user.Name)
                 .NotEmpty().MaximumLength(48);
