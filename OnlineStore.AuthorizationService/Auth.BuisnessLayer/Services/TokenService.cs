@@ -26,7 +26,7 @@ namespace Auth.BuisnessLayer.Services
                 new Claim(_jwtSettings.Value.RoleClaim, loginUserResponseDto.Role.ToString()),
             };
 
-            byte[] secretBytes = Encoding.UTF8.GetBytes("this_is_secret_key_for_jwt_token_generation");
+            byte[] secretBytes = Encoding.UTF8.GetBytes(_jwtSettings.Value.SecretKey);
             var key = new SymmetricSecurityKey(secretBytes);
             var signingCredentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
