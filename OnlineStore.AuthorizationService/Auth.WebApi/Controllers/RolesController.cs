@@ -7,11 +7,11 @@ namespace Auth.WebApi.Controllers
     [Route("api/[controller]")]
     public class RolesController : ControllerBase
     {
-        private readonly IRoleService _roleServices;
+        private readonly IRoleService _roleService;
 
-        public RolesController(IRoleService roleServices)
+        public RolesController(IRoleService roleService)
         {
-            _roleServices = roleServices;
+            _roleService = roleService;
         }
 
         /// <summary>
@@ -24,7 +24,7 @@ namespace Auth.WebApi.Controllers
         ///     name: "roleName"
         /// }
         /// </remarks>
-        /// <returns>ListOfRole (<IEnumerable<RoleResponseDto>>)</returns>
+        /// <returns>Role (RoleResponseDto)</returns>
         /// <response code="200">Success</response>
         /// <response code="400">The role failed to create</response>
         /// <response code="409">The role already exists</response>
@@ -34,7 +34,7 @@ namespace Auth.WebApi.Controllers
         [ProducesResponseType(StatusCodes.Status409Conflict)]
         public async Task<IActionResult> CreateAsync([FromBody] RoleRequestDto roleRequestDto, CancellationToken cancellationToken)
         {
-            var role = await _roleServices.СreateRoleAsync(roleRequestDto, cancellationToken);
+            var role = await _roleService.СreateRoleAsync(roleRequestDto, cancellationToken);
 
             return Ok(role);
         }
@@ -52,7 +52,7 @@ namespace Auth.WebApi.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<IActionResult> GetAllAsync(CancellationToken cancellationToken)
         {
-            var listOfRole = await _roleServices.GetAllRoleAsync(cancellationToken);
+            var listOfRole = await _roleService.GetAllRoleAsync(cancellationToken);
 
             return Ok(listOfRole);
         }
@@ -74,10 +74,9 @@ namespace Auth.WebApi.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetRoleByNameAsync(string name, CancellationToken cancellationToken)
         {
-            var role = await _roleServices.GetRoleByNameAsync(name, cancellationToken);
+            var role = await _roleService.GetRoleByNameAsync(name, cancellationToken);
 
             return Ok(role);
-
         }
 
         /// <summary>
@@ -99,7 +98,7 @@ namespace Auth.WebApi.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> DeleteAsync(string name, CancellationToken cancellationToken)
         {
-            await _roleServices.DeleteRoleByNameAsync(name, cancellationToken);
+            await _roleService.DeleteRoleByNameAsync(name, cancellationToken);
 
             return NoContent();
         }

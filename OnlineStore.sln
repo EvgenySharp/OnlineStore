@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.7.34009.444
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "OnlineStore.AuthorizationService", "OnlineStore.AuthorizationService", "{F82A7ACB-15F7-44EF-96ED-F9178351BD35}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "OnlineStore", "OnlineStore", "{F82A7ACB-15F7-44EF-96ED-F9178351BD35}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "BuisnessLayer", "BuisnessLayer", "{6EC7A4FB-54AE-4B05-B87A-E14390A74473}"
 EndProject

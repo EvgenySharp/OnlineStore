@@ -33,6 +33,7 @@ namespace Auth.WebApi
             services.AddValidatorsConfiguration();
             services.AddFluentValidationAutoValidation();
 
+            services.AddRouting(options => options.LowercaseUrls = true);
             var app = builder.Build();
 
             app.UseSwagger();

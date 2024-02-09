@@ -22,7 +22,6 @@ namespace Auth.BuisnessLayer.Services
             _mapper = mapper;
         }
 
-
         public async Task<RoleResponseDto> СreateRoleAsync(RoleRequestDto roleRequestDto, CancellationToken cancellationToken)
         {
             var foundRole = await _roleManager.FindByNameAsync(roleRequestDto.Name);
