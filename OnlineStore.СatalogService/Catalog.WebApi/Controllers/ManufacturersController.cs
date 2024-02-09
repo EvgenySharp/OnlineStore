@@ -151,7 +151,7 @@ namespace Catalog.WebApi.Controllers
 
             //await _mediator.Send(command, cancellationToken);
 
-            //return NoContent();
+            return NoContent();
         }
     }
 }
