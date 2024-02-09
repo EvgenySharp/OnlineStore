@@ -1,3 +1,10 @@
+using Catalog.Application.Extensions;
+using Catalog.Domain.Extensions;
+using Catalog.Persistence.Extensions;
+using Catalog.WebApi.Middlewares;
+using Microsoft.Extensions.Logging.ApplicationInsights;
+using SharpGrip.FluentValidation.AutoValidation.Mvc.Extensions;
+
 namespace Catalog.WebApi
 {
     public class Program
@@ -6,26 +13,37 @@ namespace Catalog.WebApi
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // Add services to the container.
+            var services = builder.Services;
+            var configuration = builder.Configuration;
 
-            builder.Services.AddControllers();
-            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-            builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
+            services.ConfigureDatabase(configuration);
+
+            builder.Logging.AddFilter<ApplicationInsightsLoggerProvider>("your-category", LogLevel.Trace);
+            services.AddTransient<ExceptionHandlerMiddleware>();
+
+            services.AddServices();
+
+            services.AddSwaggerGen();
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
+            services.AddApplication();
+            services.AddControllers();
+
+            services.AddValidatorsConfiguration();
+            services.AddFluentValidationAutoValidation();
+
+            services.AddRouting(options => options.LowercaseUrls = true);
 
             var app = builder.Build();
 
-            // Configure the HTTP request pipeline.
-            if (app.Environment.IsDevelopment())
-            {
-                app.UseSwagger();
-                app.UseSwaggerUI();
-            }
+            app.UseSwagger();
+            app.UseSwaggerUI();
 
             app.UseHttpsRedirection();
 
             app.UseAuthorization();
 
+            app.UseMiddleware<ExceptionHandlerMiddleware>();
 
             app.MapControllers();
 

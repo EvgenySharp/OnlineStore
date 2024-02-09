@@ -1,12 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Catalog.Application.DTOs.ResponseDtos;
+using MediatR;
 
 namespace Catalog.Application.Products.Commands.CreateProduct
 {
-    internal class CreateProductCommand
+    public class CreateProductCommand : IRequest<CreateProtuctResponseDto>
     {
+        public string ProductTitle { get; set; }
+        public ManufacturerResponseDto Manufacturer { get; set; }
+        public CreateCategoryResponseDto Category { get; set; }
     }
 }

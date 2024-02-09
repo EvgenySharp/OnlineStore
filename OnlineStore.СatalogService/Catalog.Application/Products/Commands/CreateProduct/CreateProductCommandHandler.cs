@@ -1,12 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Catalog.Application.DTOs.ResponseDtos;
+using MediatR;
 
 namespace Catalog.Application.Products.Commands.CreateProduct
 {
-    internal class CreateProductCommandHandler
+    public class CreateProductCommandHandler
+        : IRequestHandler<CreateProductCommand, CreateProtuctResponseDto>
     {
+        public async Task<CreateProtuctResponseDto> Handle(CreateProductCommand request, CancellationToken cancellationToken)
+        {
+
+            throw new NotImplementedException();
+        }
     }
 }
