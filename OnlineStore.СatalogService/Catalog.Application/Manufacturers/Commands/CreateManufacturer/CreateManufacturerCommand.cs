@@ -1,10 +1,11 @@
-﻿using Catalog.Application.DTOs.ResponseDtos;
+﻿using Catalog.Application.DTOs.RequestDtos.Manufacturers;
+using Catalog.Application.DTOs.ResponseDtos.Manufacturers;
 using MediatR;
 
 namespace Catalog.Application.Manufacturers.Commands.CreateManufacturer
 {
-    public class CreateManufacturerCommand : IRequest<ManufacturerResponseDto>
+    public class CreateManufacturerCommand : IRequest<CreateManufacturerResponseDto>
     {
-        public string ManufacturerTitle { get; set; }
+        public CreateManufacturerRequestDto CreateManufacturerRequestDto { get; set; }
     }
 }

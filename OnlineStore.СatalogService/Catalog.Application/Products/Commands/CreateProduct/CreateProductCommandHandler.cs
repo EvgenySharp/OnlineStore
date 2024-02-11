@@ -1,4 +1,4 @@
-﻿using Catalog.Application.DTOs.ResponseDtos;
+﻿using Catalog.Application.DTOs.ResponseDtos.Products;
 using MediatR;
 
 namespace Catalog.Application.Products.Commands.CreateProduct
@@ -8,7 +8,6 @@ namespace Catalog.Application.Products.Commands.CreateProduct
     {
         public async Task<CreateProtuctResponseDto> Handle(CreateProductCommand request, CancellationToken cancellationToken)
         {
-
             throw new NotImplementedException();
         }
     }

@@ -1,6 +1,4 @@
-﻿using System.Net;
-
-namespace Catalog.Persistence.Abstractions.Classes
+﻿namespace Catalog.Persistence.Abstractions.Classes
 {
     public abstract class RepositoryResultException : Exception
     {

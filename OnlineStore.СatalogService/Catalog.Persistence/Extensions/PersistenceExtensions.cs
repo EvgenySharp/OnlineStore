@@ -9,7 +9,8 @@ namespace Catalog.Persistence.Extensions
         public static IServiceCollection AddServices(this IServiceCollection services)
         {
             return services
-                .AddScoped<IManufacturerRepository, ManufacturerRepository>();
+                .AddScoped<IManufacturerRepository, ManufacturerRepository>()
+                .AddScoped<ICategoryRepository, CategoryRepository>();
         }
     }
 }

@@ -1,12 +1,12 @@
 ﻿using AutoMapper;
-using Catalog.Application.DTOs.ResponseDtos;
-using Catalog.Application.Exceptions;
+using Catalog.Application.DTOs.ResponseDtos.Manufacturers;
+using Catalog.Application.Exceptions.Manufacturers;
 using Catalog.Persistence.Abstractions.Interfaces;
-using MediatR; 
+using MediatR;
 
 namespace Catalog.Application.Manufacturers.Queries.GetManufacturerDetails
 {
-    public class GetManufacturerDetailsQueryHandler : IRequestHandler<GetManufacturerDetailsQuery, ManufacturerResponseDto>
+    public class GetManufacturerDetailsQueryHandler : IRequestHandler<GetManufacturerDetailsQuery, GetManufacturerResponseDto>
     {
         private readonly IManufacturerRepository _manufacturerRepository;
         private readonly IMapper _mapper;
@@ -19,16 +19,16 @@ namespace Catalog.Application.Manufacturers.Queries.GetManufacturerDetails
             _mapper = mapper;
         }
 
-        public async Task<ManufacturerResponseDto> Handle(GetManufacturerDetailsQuery request, CancellationToken cancellationToken)
+        public async Task<GetManufacturerResponseDto> Handle(GetManufacturerDetailsQuery request, CancellationToken cancellationToken)
         {
-            var foundManufacturer = await _manufacturerRepository.FindByTitleAsync(request.Title);
+            var foundManufacturer = await _manufacturerRepository.FindByIdAsync(request.Id, cancellationToken);
 
             if (foundManufacturer is null)
             {
                 throw new ManufacturerNotFoundException();
             }
 
-            var manufacturerResponseDto = _mapper.Map<ManufacturerResponseDto>(foundManufacturer);
+            var manufacturerResponseDto = _mapper.Map<GetManufacturerResponseDto>(foundManufacturer);
 
             return manufacturerResponseDto;
         }

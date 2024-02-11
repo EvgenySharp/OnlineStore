@@ -1,4 +1,4 @@
-﻿using Catalog.Application.DTOs.RequestDtos;
+﻿using Catalog.Application.DTOs.RequestDtos.Manufacturers;
 using FluentValidation;
 
 namespace Catalog.Application.Validation.ValidationRules

@@ -1,10 +1,10 @@
-﻿using Catalog.Application.DTOs.ResponseDtos;
+﻿using Catalog.Application.DTOs.ResponseDtos.Manufacturers;
 using MediatR;
 
 namespace Catalog.Application.Manufacturers.Queries.GetManufacturerDetails
 {
-    public class GetManufacturerDetailsQuery : IRequest<ManufacturerResponseDto>
+    public class GetManufacturerDetailsQuery : IRequest<GetManufacturerResponseDto>
     {
-        public string Title { get; set; }
+        public Guid Id { get; set; }
     }
 }

@@ -1,7 +1,7 @@
 ﻿using Catalog.Domain;
 using Catalog.Domain.Entities;
 using Catalog.Persistence.Abstractions.Interfaces;
-using Catalog.Persistence.Exceptions.Manufacturer;
+using Catalog.Persistence.Exceptions;
 using Microsoft.EntityFrameworkCore;
 
 namespace Catalog.Persistence.Repositores
@@ -15,7 +15,7 @@ namespace Catalog.Persistence.Repositores
             _dbContext = dbContext;
         }
 
-        public async Task<RepositoryResult> CreateAsync(Manufacturer manufacturer)
+        public async Task<RepositoryResult> CreateAsync(Manufacturer manufacturer, CancellationToken cancellationToken)
         {
             var addResult = await _dbContext.Manufacturer.AddAsync(manufacturer);
             
@@ -29,35 +29,47 @@ namespace Catalog.Persistence.Repositores
             return new RepositoryResult(true);
         }
 
-        public async Task<Manufacturer?> FindByTitleAsync(string manufacturerTitle)
+        public async Task<IEnumerable<Manufacturer>> GetAllAsync(int pageSize, int pageNumber, CancellationToken cancellationToken)
         {
-            var manufacturer = await _dbContext.Manufacturer.FirstOrDefaultAsync(manufacturer => manufacturer.Title == manufacturerTitle);
+            var listOfManufacturers = await _dbContext.Manufacturer
+                .Skip(pageSize * (pageNumber - 1))
+                .Take(pageSize)
+                .OrderByDescending(m => m.Title)
+                .ToListAsync();
 
-            return manufacturer;
+            return listOfManufacturers;
         }
 
-        public async Task<Manufacturer?> FindByIdAsync(Guid manufacturerId)
+        public async Task<Manufacturer?> FindByIdAsync(Guid manufacturerId, CancellationToken cancellationToken)
         {
             var manufacturer = await _dbContext.Manufacturer.FirstOrDefaultAsync(manufacturer => manufacturer.Id == manufacturerId);
 
             return manufacturer;
         }
 
-        public async Task<IEnumerable<Manufacturer>> GetAllAsync()
+        public async Task<Manufacturer?> FindByTitleAsync(string manufacturerTitle, CancellationToken cancellationToken)
         {
-            var listOfManufacturers = await _dbContext.Manufacturer.ToListAsync();
+            var manufacturer = await _dbContext.Manufacturer.FirstOrDefaultAsync(manufacturer => manufacturer.Title == manufacturerTitle);
 
-            return listOfManufacturers;
+            return manufacturer;
         }
 
-        public async Task<RepositoryResult> ChangeTitleAsync(Manufacturer manufacturer, string mewTitle)
+        public async Task<RepositoryResult> ChangeTitleAsync(Manufacturer manufacturer, string mewTitle, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            manufacturer.Title = mewTitle;
+
+            await _dbContext.SaveChangesAsync();
+
+            return new RepositoryResult(true);
         }
 
-        public async Task<RepositoryResult> DeleteAsync(Manufacturer manufacturer)
+        public async Task<RepositoryResult> DeleteAsync(Manufacturer manufacturer, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            _dbContext.Manufacturer.Remove(manufacturer);
+
+            await _dbContext.SaveChangesAsync();
+
+            return new RepositoryResult(true);
         }
     }
 }
