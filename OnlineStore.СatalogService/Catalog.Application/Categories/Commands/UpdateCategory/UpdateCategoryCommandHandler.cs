@@ -15,7 +15,7 @@ namespace Catalog.Application.Categories.Commands.UpdateCategory
 
         public async Task<Unit> Handle(UpdateCategoryCommand request, CancellationToken cancellationToken)
         {
-            var categoryRequestDto = request.uptadeCategoryRequestDto;
+            var categoryRequestDto = request.UptadeCategoryRequestDto;
             var foundCategory = await _categoryRepository.FindByIdAsync(categoryRequestDto.Id, cancellationToken);
 
             if (foundCategory is null)
@@ -23,9 +23,9 @@ namespace Catalog.Application.Categories.Commands.UpdateCategory
                 throw new CategoryNotFoundException();
             }
 
-            var manufacturerChangeResult = await _categoryRepository.ChangeTitleAsync(foundCategory, categoryRequestDto.NewTiitle, cancellationToken);
+            var categoryChangeResult = await _categoryRepository.ChangeTitleAsync(foundCategory, categoryRequestDto.NewTiitle, cancellationToken);
 
-            if (!manufacturerChangeResult.Succeeded)
+            if (!categoryChangeResult.Succeeded)
             {
                 throw new CategoryUpdateException();
             }

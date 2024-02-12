@@ -57,15 +57,15 @@ namespace Catalog.WebApi.Controllers
         ///     pageCount: 1
         /// }
         /// </remarks>
-        /// <param name="categoryDto">GetCategoryRequestDto object</param>
+        /// <param name="categoryRequestDto">GetCategoryRequestDto object</param>
         /// <returns>ListOfCategory (<IEnumerable<GetCategoryResponseDto>>)</returns>
         /// <response code="200">Success</response>
         [HttpPost]
         [Route("page")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetAllAsync([FromBody] GetCategoryRequestDto categoryDto, CancellationToken cancellationToken)
+        public async Task<IActionResult> GetAllAsync([FromBody] GetCategoryRequestDto categoryRequestDto, CancellationToken cancellationToken)
         {
-            var command = new GetCategoryListQuery() { GetCategoryRequestDto = categoryDto };
+            var command = new GetCategoryListQuery() { GetCategoryRequestDto = categoryRequestDto };
             var listOfCategory = await _mediator.Send(command, cancellationToken);
 
             return Ok(listOfCategory);
@@ -86,7 +86,7 @@ namespace Catalog.WebApi.Controllers
         [Route("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> GetRoleByIdAsync(Guid id, CancellationToken cancellationToken)
+        public async Task<IActionResult> GetByIdAsync(Guid id, CancellationToken cancellationToken)
         {
             var command = new GetCategoryDetailsQuery() { Id = id };
             var category = await _mediator.Send(command, cancellationToken);
@@ -116,7 +116,7 @@ namespace Catalog.WebApi.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> СhangeTitleAsync([FromBody] UptadeCategoryRequestDto categoryRequestDto, CancellationToken cancellationToken)
         {
-            var command = new UpdateCategoryCommand() { uptadeCategoryRequestDto = categoryRequestDto };
+            var command = new UpdateCategoryCommand() { UptadeCategoryRequestDto = categoryRequestDto };
             
             await _mediator.Send(command, cancellationToken);
 

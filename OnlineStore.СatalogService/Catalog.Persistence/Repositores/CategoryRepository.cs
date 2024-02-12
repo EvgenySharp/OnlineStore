@@ -42,7 +42,7 @@ namespace Catalog.Persistence.Repositores
 
         public async Task<Category?> FindByIdAsync(Guid categoryId, CancellationToken cancellationToken)
         {
-            var category = await _dbContext.Category.FirstOrDefaultAsync(category => category.Id == categoryId);
+            var category = await _dbContext.Category.AsTracking().FirstOrDefaultAsync(category => category.Id == categoryId);
 
             return category;
         }
@@ -54,9 +54,9 @@ namespace Catalog.Persistence.Repositores
             return category;
         }
 
-        public async Task<RepositoryResult> ChangeTitleAsync(Category category, string mewTitle, CancellationToken cancellationToken)
+        public async Task<RepositoryResult> ChangeTitleAsync(Category category, string newTitle, CancellationToken cancellationToken)
         {
-            category.Title = mewTitle;
+            category.Title = newTitle;
 
             await _dbContext.SaveChangesAsync();
 
@@ -65,11 +65,30 @@ namespace Catalog.Persistence.Repositores
 
         public async Task<RepositoryResult> DeleteAsync(Category category, CancellationToken cancellationToken)
         {
-            _dbContext.Category.Remove(category);
+            await ResetCategory(category);
+
+            var deleteResult = _dbContext.Category.Remove(category);
+
+            if (deleteResult.State is not EntityState.Deleted)
+            {
+                return new RepositoryResult(false, new CategoryStateException(deleteResult.State.ToString()));
+            }
 
             await _dbContext.SaveChangesAsync();
 
             return new RepositoryResult(true);
+        }
+
+        private async Task ResetCategory(Category category)
+        {
+            await _dbContext.Entry(category)
+                .Collection(m => m.Products)
+                .LoadAsync();
+
+            foreach (var product in category.Products)
+            {
+                product.ManufacturerId = null;
+            }
         }
     }
 }

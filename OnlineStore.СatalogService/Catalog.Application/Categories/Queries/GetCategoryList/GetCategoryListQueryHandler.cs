@@ -5,7 +5,7 @@ using MediatR;
 
 namespace Catalog.Application.Categories.Queries.GetCategoryList
 {
-    public class GetCategoryListQueryHandler:IRequestHandler<GetCategoryListQuery, IEnumerable<GetCategoryResponseDto>>
+    public class GetCategoryListQueryHandler : IRequestHandler<GetCategoryListQuery, IEnumerable<GetCategoryResponseDto>>
     {
         private readonly ICategoryRepository _categoryRepository;
         private readonly IMapper _mapper;

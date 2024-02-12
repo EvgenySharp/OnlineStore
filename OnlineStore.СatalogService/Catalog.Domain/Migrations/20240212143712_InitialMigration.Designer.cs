@@ -4,6 +4,7 @@ using Catalog.Domain;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Catalog.Domain.Migrations
 {
     [DbContext(typeof(СatalogDbContext))]
-    partial class СatalogDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240212143712_InitialMigration")]
+    partial class InitialMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -61,7 +64,13 @@ namespace Catalog.Domain.Migrations
                     b.Property<Guid?>("CategoryId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<Guid?>("CategoryIdmy")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<Guid?>("ManufacturerId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("ManufacturerIdmy")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Title")

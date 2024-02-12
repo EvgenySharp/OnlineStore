@@ -5,6 +5,6 @@ namespace Catalog.Application.Categories.Commands.UpdateCategory
 {
     public class UpdateCategoryCommand : IRequest
     {
-        public UptadeCategoryRequestDto uptadeCategoryRequestDto { get; set; }
+        public UptadeCategoryRequestDto UptadeCategoryRequestDto { get; set; }
     }
 }

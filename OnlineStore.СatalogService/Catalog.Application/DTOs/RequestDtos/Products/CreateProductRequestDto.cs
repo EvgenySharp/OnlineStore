@@ -1,6 +1,6 @@
 ﻿namespace Catalog.Application.DTOs.RequestDtos.Products
 {
-    public class CreateProtuctRequestDto
+    public class CreateProductRequestDto
     {
         public string Title { get; set; }
         public Guid ManufacturerId { get; set; }

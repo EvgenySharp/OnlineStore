@@ -10,7 +10,8 @@ namespace Catalog.Persistence.Extensions
         {
             return services
                 .AddScoped<IManufacturerRepository, ManufacturerRepository>()
-                .AddScoped<ICategoryRepository, CategoryRepository>();
+                .AddScoped<ICategoryRepository, CategoryRepository>()
+                .AddScoped<IProductRepository, ProductRepository>();
         }
     }
 }

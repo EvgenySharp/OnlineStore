@@ -42,7 +42,7 @@ namespace Catalog.Persistence.Repositores
 
         public async Task<Manufacturer?> FindByIdAsync(Guid manufacturerId, CancellationToken cancellationToken)
         {
-            var manufacturer = await _dbContext.Manufacturer.FirstOrDefaultAsync(manufacturer => manufacturer.Id == manufacturerId);
+            var manufacturer = await _dbContext.Manufacturer.AsTracking().FirstOrDefaultAsync(manufacturer => manufacturer.Id == manufacturerId);
 
             return manufacturer;
         }
@@ -54,9 +54,9 @@ namespace Catalog.Persistence.Repositores
             return manufacturer;
         }
 
-        public async Task<RepositoryResult> ChangeTitleAsync(Manufacturer manufacturer, string mewTitle, CancellationToken cancellationToken)
+        public async Task<RepositoryResult> ChangeTitleAsync(Manufacturer manufacturer, string newTitle, CancellationToken cancellationToken)
         {
-            manufacturer.Title = mewTitle;
+            manufacturer.Title = newTitle;
 
             await _dbContext.SaveChangesAsync();
 
@@ -65,11 +65,30 @@ namespace Catalog.Persistence.Repositores
 
         public async Task<RepositoryResult> DeleteAsync(Manufacturer manufacturer, CancellationToken cancellationToken)
         {
-            _dbContext.Manufacturer.Remove(manufacturer);
+            await ResetManufacturer(manufacturer);
+
+            var deleteResult = _dbContext.Manufacturer.Remove(manufacturer);
+
+            if (deleteResult.State is not EntityState.Deleted)
+            {
+                return new RepositoryResult(false, new ManufacturerStateException(deleteResult.State.ToString()));
+            }
 
             await _dbContext.SaveChangesAsync();
 
             return new RepositoryResult(true);
+        }
+
+        private async Task ResetManufacturer(Manufacturer manufacturer)
+        {
+            await _dbContext.Entry(manufacturer)
+            .Collection(m => m.Products)
+            .LoadAsync();
+
+            foreach (var product in manufacturer.Products)
+            {
+                product.ManufacturerId = null;
+            }
         }
     }
 }

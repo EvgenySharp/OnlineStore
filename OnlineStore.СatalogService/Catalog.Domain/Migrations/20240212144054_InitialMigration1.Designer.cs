@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Catalog.Domain.Migrations
 {
     [DbContext(typeof(СatalogDbContext))]
-    [Migration("20240208062830_InitialMigration")]
-    partial class InitialMigration
+    [Migration("20240212144054_InitialMigration1")]
+    partial class InitialMigration1
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -61,10 +61,10 @@ namespace Catalog.Domain.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("CategoryId")
+                    b.Property<Guid?>("CategoryId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("ManufacturerId")
+                    b.Property<Guid?>("ManufacturerId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Title")
@@ -82,21 +82,23 @@ namespace Catalog.Domain.Migrations
 
             modelBuilder.Entity("Catalog.Domain.Entities.Product", b =>
                 {
-                    b.HasOne("Catalog.Domain.Entities.Category", "Category")
-                        .WithMany()
-                        .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.HasOne("Catalog.Domain.Entities.Category", null)
+                        .WithMany("Products")
+                        .HasForeignKey("CategoryId");
 
-                    b.HasOne("Catalog.Domain.Entities.Manufacturer", "Manufacturer")
-                        .WithMany()
-                        .HasForeignKey("ManufacturerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.HasOne("Catalog.Domain.Entities.Manufacturer", null)
+                        .WithMany("Products")
+                        .HasForeignKey("ManufacturerId");
+                });
 
-                    b.Navigation("Category");
+            modelBuilder.Entity("Catalog.Domain.Entities.Category", b =>
+                {
+                    b.Navigation("Products");
+                });
 
-                    b.Navigation("Manufacturer");
+            modelBuilder.Entity("Catalog.Domain.Entities.Manufacturer", b =>
+                {
+                    b.Navigation("Products");
                 });
 #pragma warning restore 612, 618
         }

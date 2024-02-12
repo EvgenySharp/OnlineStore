@@ -8,9 +8,14 @@ namespace Catalog.Application.Mappings.Products
     {
         public ProtuctEntityMap()
         {
-            CreateMap<CreateProtuctRequestDto, Product>()
+            CreateMap<CreateProductRequestDto, Product>()
                 .ForMember(entityProtuct => entityProtuct.Title,
-                    opt => opt.MapFrom(protuctDto => protuctDto.Title));
+                    opt => opt.MapFrom(productForMap => productForMap.Title))
+                .ForMember(entityProtuct => entityProtuct.CategoryId,
+                    opt => opt.MapFrom(productForMap => productForMap.CategoryId))
+                .ForMember(entityProtuct => entityProtuct.ManufacturerId,
+                    opt => opt.MapFrom(productForMap => productForMap.ManufacturerId));
+
         }
     }
 }
