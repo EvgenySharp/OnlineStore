@@ -120,7 +120,7 @@ namespace Catalog.WebApi.Controllers
         /// <response code="204">Success</response>
         /// <response code="400">Product failed to update</response>
         /// <response code="404">The product was not found</response>
-        [HttpPatch("rename")]
+        [HttpPatch("rename/{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -190,7 +190,7 @@ namespace Catalog.WebApi.Controllers
         /// <response code="204">Success</response>
         /// <response code="400">Product failed to update</response>
         /// <response code="404">The product or manufacturer was not found</response>
-        [HttpPatch("сhange-manufacturer")]
+        [HttpPatch("сhange-manufacturer/{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
