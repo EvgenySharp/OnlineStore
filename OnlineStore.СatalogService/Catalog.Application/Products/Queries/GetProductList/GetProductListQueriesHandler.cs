@@ -20,8 +20,7 @@ namespace Catalog.Application.Products.Queries.GetProductList
 
         public async Task<IEnumerable<GetProductResponseDto>> Handle(GetProductListQueries request, CancellationToken cancellationToken)
         {
-            var productDto = request.GetProductRequestDto;
-            var productList = await _productRepository.GetAllAsync(productDto.PageSize, productDto.PageCount, cancellationToken);
+            var productList = await _productRepository.GetAllAsync(request.PageSize, request.PageCount, cancellationToken);
             var productResponseDtoList = _mapper.Map<List<GetProductResponseDto>>(productList);
 
             return productResponseDtoList;

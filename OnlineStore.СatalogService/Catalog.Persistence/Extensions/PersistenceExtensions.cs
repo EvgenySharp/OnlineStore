@@ -6,7 +6,7 @@ namespace Catalog.Persistence.Extensions
 {
     public static class PersistenceExtensions
     {
-        public static IServiceCollection AddServices(this IServiceCollection services)
+        public static IServiceCollection AddRepositories(this IServiceCollection services)
         {
             return services
                 .AddScoped<IManufacturerRepository, ManufacturerRepository>()

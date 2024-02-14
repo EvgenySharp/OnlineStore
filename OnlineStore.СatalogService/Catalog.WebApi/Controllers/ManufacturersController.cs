@@ -4,17 +4,18 @@ using Catalog.Application.Manufacturers.Commands.DeleteManufacturer;
 using Catalog.Application.Manufacturers.Commands.UpdateBook;
 using Catalog.Application.Manufacturers.Queries.GetManufacturerDetails;
 using Catalog.Application.Manufacturers.Queries.GetManufacturerList;
+using Catalog.Domain.Entities;
 using MediatR;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Catalog.WebApi.Controllers
 {
     [Controller]
-    [Route("api/[controller]")]
-    
+    [Route("api/[controller]")]    
     public class ManufacturersController : ControllerBase
     {
-        private IMediator _mediator;
+        private readonly IMediator _mediator;
 
         public ManufacturersController(IMediator mediator) 
         { 
@@ -53,21 +54,20 @@ namespace Catalog.WebApi.Controllers
         /// </summary>
         /// <remarks>
         /// Sample request:
-        /// Post /api/manufacturers/page
-        /// {
-        ///     pageSize: 2,
-        ///     pageCount: 1
-        /// }
+        /// Post /api/manufacturers/page?pageSize=2&pageCount=1
         /// </remarks>
         /// <param name="manufacturerDto">GetManufacturerRequestDto object</param>
         /// <returns>ListOfManufacturer (<IEnumerable<GetManufacturerResponseDto>>)</returns>
         /// <response code="200">Success</response>
-        [HttpPost]
-        [Route("page")]
+        [HttpPost("page")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetAllAsync([FromBody] GetManufacturerRequestDto manufacturerDto, CancellationToken cancellationToken)
+        public async Task<IActionResult> GetAllAsync([FromQuery] int pageSize, [FromQuery] int pageCount, CancellationToken cancellationToken)
         {
-            var command = new GetManufacturerListQuery() { GetManufacturerRequestDto = manufacturerDto };
+            var command = new GetManufacturerListQuery()
+            {
+                PageSize = pageSize,
+                PageCount = pageCount
+            };
             var listOfManufacturer = await _mediator.Send(command, cancellationToken);
 
             return Ok(listOfManufacturer);
@@ -84,8 +84,7 @@ namespace Catalog.WebApi.Controllers
         /// <returns>Manufacturer (GetManufacturerResponseDto)</returns>
         /// <response code="200">Success</response>
         /// <response code="404">The manufacturer was not found</response>
-        [HttpGet]
-        [Route("{id}")]
+        [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetByIdAsync(Guid id, CancellationToken cancellationToken)
@@ -101,24 +100,30 @@ namespace Catalog.WebApi.Controllers
         /// </summary>
         /// <remarks>
         /// Sample request:
-        /// PUT /api/manufacturers
-        /// {
-        ///     "id": "7200f6a3-132c-46c9-8b9f-27b9b3c2d122"
-        ///     "newTitle": "Aple"
-        /// }
+        /// PUT /api/manufacturers/7200f6a3-132c-46c9-8b9f-27b9b3c2d122
+        /// [
+        ///     {
+        ///         "operationType": 0,
+        ///         "path": "Title",
+        ///         "op": "replace",
+        ///         "from": "string",
+        ///         "value": "NewTitle"
+        ///     }
+        /// ]
         /// </remarks>
-        /// <param name="manufacturerRequestDto">UptadeManufacturerRequestDto object</param>
+        /// <param name="jsonPatchManufacturerDto">JsonPatchDocument<Manufacturer> object</param>
+        /// <param name="id">Guid object</param>
         /// <returns>Returns NoContent</returns>
         /// <response code="204">Success</response>
-        /// <response code="400">Manufacturer Failed to update</response>
+        /// <response code="400">Manufacturer failed to update</response>
         /// <response code="404">The manufacturer was not found</response>
-        [HttpPut]
+        [HttpPatch("{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> СhangeTitleAsync([FromBody] UptadeManufacturerRequestDto manufacturerRequestDto, CancellationToken cancellationToken)
+        public async Task<IActionResult> СhangeTitleAsync([FromBody] JsonPatchDocument<Manufacturer> jsonPatchManufacturerDto, Guid id, CancellationToken cancellationToken)
         {
-            var command = new UpdateManufacturerCommand() { uptadeManufacturerRequestDto = manufacturerRequestDto };
+            var command = new UpdateManufacturerCommand() { JsonPatchManufacturerDto = jsonPatchManufacturerDto, ManufacturerId = id};
 
             await _mediator.Send(command, cancellationToken);
 
@@ -137,8 +142,7 @@ namespace Catalog.WebApi.Controllers
         /// <response code="204">Success</response>
         /// <response code="400">Manufacturer Failed to delete</response>
         /// <response code="404">The manufacturer was not found</response>
-        [HttpDelete]
-        [Route("{id}")]
+        [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]

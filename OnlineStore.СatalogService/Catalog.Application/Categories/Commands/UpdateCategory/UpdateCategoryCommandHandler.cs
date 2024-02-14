@@ -15,17 +15,16 @@ namespace Catalog.Application.Categories.Commands.UpdateCategory
 
         public async Task<Unit> Handle(UpdateCategoryCommand request, CancellationToken cancellationToken)
         {
-            var categoryRequestDto = request.UptadeCategoryRequestDto;
-            var foundCategory = await _categoryRepository.FindByIdAsync(categoryRequestDto.Id, cancellationToken);
+            var foundCategory = await _categoryRepository.FindByIdAsync(request.CategoryId, cancellationToken);
 
             if (foundCategory is null)
             {
                 throw new CategoryNotFoundException();
             }
 
-            var categoryChangeResult = await _categoryRepository.ChangeTitleAsync(foundCategory, categoryRequestDto.NewTiitle, cancellationToken);
+            var categoryUpdateResult = await _categoryRepository.UpdateAsync(foundCategory, request.JsonPatchCategoryDto, cancellationToken);
 
-            if (!categoryChangeResult.Succeeded)
+            if (!categoryUpdateResult.Succeeded)
             {
                 throw new CategoryUpdateException();
             }

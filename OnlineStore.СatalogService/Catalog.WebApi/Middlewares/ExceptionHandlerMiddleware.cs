@@ -1,4 +1,5 @@
 ﻿using Catalog.Application.Abstractions.Сlasses;
+using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using System.Text.Json;
 
@@ -18,6 +19,17 @@ namespace Catalog.WebApi.Middlewares
             try
             {
                 await requestDelegate(context);
+            }
+            catch (ValidationException exception)
+            {
+                ProblemDetails problem = new()
+                {
+                    Status = 400,
+                    Type = exception.GetType().Name,
+                    Detail = exception.Message                    
+                };
+
+                await ExceptionHandler(exception, problem, context);
             }
             catch (CatalogApplicationException exception)
             {

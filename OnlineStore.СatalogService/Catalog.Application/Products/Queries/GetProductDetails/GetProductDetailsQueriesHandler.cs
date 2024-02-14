@@ -22,7 +22,7 @@ namespace Catalog.Application.Products.Queries.GetProductDetails
         public async Task<GetProductResponseDto> Handle(GetProductDetailsQueries request, CancellationToken cancellationToken)
         {
             var foundProduct = await _productRepository.FindByIdAsync(request.Id, cancellationToken);
-
+            
             if (foundProduct is null)
             {
                 throw new ProductNotFoundException();

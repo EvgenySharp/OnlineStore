@@ -20,22 +20,28 @@ namespace Catalog.Application.Products.Commands.UpdateProduct.UpdateCategory
 
         public async Task<Unit> Handle(UpdateProductCategoryCommand request, CancellationToken cancellationToken)
         {
-            var productRequestDto = request.UptadeProductCategoryRequestDto;
-            var foundProduct = await _productRepository.FindByIdAsync(productRequestDto.Id, cancellationToken);
+            var foundProduct = await _productRepository.FindByIdAsync(request.ProductId, cancellationToken);
 
             if (foundProduct is null)
             {
                 throw new ProductNotFoundException();
             }
 
-            var foundCategory = await _categoryRepository.FindByIdAsync(productRequestDto.NewCategoryId, cancellationToken);
+            string guidString = request.JsonPatchProductDto.Operations.FirstOrDefault()?.value.ToString();
+
+            if (!Guid.TryParse(guidString, out Guid parsedGuid))
+            {
+                throw new InvalidOperationException("The provided GUID is not valid.");
+            }
+
+            var foundCategory = await _categoryRepository.FindByIdAsync(parsedGuid, cancellationToken);
 
             if (foundCategory is null)
             {
                 throw new CategoryNotFoundException();
             }
 
-            var productChangeResult = await _productRepository.ChangeCategoryIdAsync(foundProduct, productRequestDto.NewCategoryId, cancellationToken);
+            var productChangeResult = await _productRepository.UpdateAsync(foundProduct, request.JsonPatchProductDto, cancellationToken);
 
             if (!productChangeResult.Succeeded)
             {

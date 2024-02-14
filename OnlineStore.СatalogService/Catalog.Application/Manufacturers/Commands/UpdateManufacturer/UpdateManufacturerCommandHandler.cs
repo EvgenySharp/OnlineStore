@@ -15,15 +15,14 @@ namespace Catalog.Application.Manufacturers.Commands.UpdateBook
 
         public async Task<Unit> Handle(UpdateManufacturerCommand request, CancellationToken cancellationToken)
         {
-            var manufacturerRequestDto = request.uptadeManufacturerRequestDto;
-            var foundManufacturer = await _manufacturerRepository.FindByIdAsync(manufacturerRequestDto.Id, cancellationToken);
+            var foundManufacturer = await _manufacturerRepository.FindByIdAsync(request.ManufacturerId, cancellationToken);
 
             if (foundManufacturer is null)
             {
                 throw new ManufacturerNotFoundException();
             }
 
-            var manufacturerChangeResult = await _manufacturerRepository.ChangeTitleAsync(foundManufacturer, manufacturerRequestDto.NewTiitle, cancellationToken);
+            var manufacturerChangeResult = await _manufacturerRepository.UpdateAsync(foundManufacturer, request.JsonPatchManufacturerDto, cancellationToken);
 
             if (!manufacturerChangeResult.Succeeded)
             {

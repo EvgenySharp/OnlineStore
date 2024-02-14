@@ -34,7 +34,7 @@ namespace Catalog.Domain.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Category");
+                    b.ToTable("Categories");
                 });
 
             modelBuilder.Entity("Catalog.Domain.Entities.Manufacturer", b =>
@@ -49,7 +49,7 @@ namespace Catalog.Domain.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Manufacturer");
+                    b.ToTable("Manufacturers");
                 });
 
             modelBuilder.Entity("Catalog.Domain.Entities.Product", b =>
@@ -74,18 +74,22 @@ namespace Catalog.Domain.Migrations
 
                     b.HasIndex("ManufacturerId");
 
-                    b.ToTable("Product");
+                    b.ToTable("Products");
                 });
 
             modelBuilder.Entity("Catalog.Domain.Entities.Product", b =>
                 {
-                    b.HasOne("Catalog.Domain.Entities.Category", null)
+                    b.HasOne("Catalog.Domain.Entities.Category", "Category")
                         .WithMany("Products")
                         .HasForeignKey("CategoryId");
 
-                    b.HasOne("Catalog.Domain.Entities.Manufacturer", null)
+                    b.HasOne("Catalog.Domain.Entities.Manufacturer", "Manufacturer")
                         .WithMany("Products")
                         .HasForeignKey("ManufacturerId");
+
+                    b.Navigation("Category");
+
+                    b.Navigation("Manufacturer");
                 });
 
             modelBuilder.Entity("Catalog.Domain.Entities.Category", b =>

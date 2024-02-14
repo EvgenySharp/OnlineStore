@@ -3,6 +3,6 @@
     public class UptadeProductTitleRequestDto
     {
         public Guid Id { get; set; }
-        public string NewTiitle { get; set; }
+        public string NewTitle { get; set; }
     }
 }

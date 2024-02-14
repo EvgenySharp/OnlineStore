@@ -30,7 +30,9 @@ namespace Catalog.Application.Manufacturers.Commands.CreateManufacturer
                 throw new ManufacturerAlreadyExistsException();
             }
 
-            var newManufacturer = _mapper.Map<Manufacturer>(manufacturerRequestDto);           
+            var newManufacturer = _mapper.Map<Manufacturer>(manufacturerRequestDto);
+            newManufacturer.Id = Guid.NewGuid();
+
             var manufacturerCreationResult = await _manufacturerRepository.CreateAsync(newManufacturer, cancellationToken);
 
             if (!manufacturerCreationResult.Succeeded)

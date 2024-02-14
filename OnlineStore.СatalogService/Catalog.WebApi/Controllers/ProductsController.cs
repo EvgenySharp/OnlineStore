@@ -6,7 +6,9 @@ using Catalog.Application.Products.Commands.UpdateProduct.UpdateManufacturer;
 using Catalog.Application.Products.Commands.UpdateProduct.UpdateTitle;
 using Catalog.Application.Products.Queries.GetProductDetails;
 using Catalog.Application.Products.Queries.GetProductList;
+using Catalog.Domain.Entities;
 using MediatR;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Catalog.WebApi.Controllers
@@ -14,7 +16,7 @@ namespace Catalog.WebApi.Controllers
     [Route("api/[controller]")]
     public class ProductsController : ControllerBase
     {
-        private IMediator _mediator;
+        private readonly IMediator _mediator;
 
         public ProductsController(IMediator mediator)
         {
@@ -55,21 +57,20 @@ namespace Catalog.WebApi.Controllers
         /// </summary>
         /// <remarks>
         /// Sample request:
-        /// Post /api/products/page
-        /// {
-        ///     pageSize: 2,
-        ///     pageCount: 1
-        /// }
+        /// Post /api/products/page?pageSize=2&pageCount=1
         /// </remarks>
         /// <param name="productRequestDto">GetProductRequestDto object</param>
         /// <returns>listOfProduct (<IEnumerable<GetProductResponseDto>>)</returns>
         /// <response code="200">Success</response>
-        [HttpPost]
-        [Route("page")]
+        [HttpPost("page")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetAllAsync([FromBody] GetProductRequestDto productRequestDto, CancellationToken cancellationToken)
+        public async Task<IActionResult> GetAllAsync([FromQuery] int pageSize, [FromQuery] int pageCount, CancellationToken cancellationToken)
         {
-            var command = new GetProductListQueries() { GetProductRequestDto = productRequestDto };
+            var command = new GetProductListQueries()
+            {
+                PageSize = pageSize,
+                PageCount = pageCount
+            };
             var listOfProduct = await _mediator.Send(command, cancellationToken);
 
             return Ok(listOfProduct);
@@ -86,8 +87,7 @@ namespace Catalog.WebApi.Controllers
         /// <returns>product (GetProductResponseDto)</returns>
         /// <response code="200">Success</response>
         /// <response code="404">The product was not found</response>
-        [HttpGet]
-        [Route("{id}")]
+        [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetByIdAsync(Guid id, CancellationToken cancellationToken)
@@ -103,25 +103,30 @@ namespace Catalog.WebApi.Controllers
         /// </summary>
         /// <remarks>
         /// Sample request:
-        /// PUT /api/products/rename
-        /// {
-        ///     "id": "7200f6a3-132c-46c9-8b9f-27b9b3c2d122"
-        ///     "newTitle": "IPhone"
-        /// }
+        /// PUT /api/products/rename/7200f6a3-132c-46c9-8b9f-27b9b3c2d122
+        /// [
+        ///     {
+        ///         "operationType": 0,
+        ///         "path": "Title",
+        ///         "op": "replace",
+        ///         "from": "string",
+        ///         "value": "NewTitle"
+        ///     }
+        /// ]
         /// </remarks>
-        /// <param name="productRequestDto">UptadeProductTitleRequestDto object</param>
+        /// <param name="jsonPatchProductDto">JsonPatchDocument<Product> object</param>
+        /// <param name="id">Guid object</param>
         /// <returns>Returns NoContent</returns>
         /// <response code="204">Success</response>
-        /// <response code="400">Product Failed to update</response>
+        /// <response code="400">Product failed to update</response>
         /// <response code="404">The product was not found</response>
-        [Route("rename")]
-        [HttpPut]
+        [HttpPatch("rename")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> СhangeTitleAsync([FromBody] UptadeProductTitleRequestDto productRequestDto, CancellationToken cancellationToken)
+        public async Task<IActionResult> СhangeTitleAsync([FromBody] JsonPatchDocument<Product> jsonPatchProductDto, Guid id, CancellationToken cancellationToken)
         {
-            var command = new UpdateProductTitleCommand() { UptadeProductTitleRequestDto = productRequestDto };
+            var command = new UpdateProductTitleCommand() { JsonPatchProductDto = jsonPatchProductDto, ProductId = id };
 
             await _mediator.Send(command, cancellationToken);
 
@@ -133,25 +138,30 @@ namespace Catalog.WebApi.Controllers
         /// </summary>
         /// <remarks>
         /// Sample request:
-        /// PUT /api/products/сhange-сatgori
-        /// {
-        ///     "id": "7200f6a3-132c-46c9-8b9f-27b9b3c2d122"
-        ///     "newCategoryId": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
-        /// }
+        /// PUT /api/products/сhange-сategory/7200f6a3-132c-46c9-8b9f-27b9b3c2d122
+        /// [
+        ///     {
+        ///         "operationType": 0,
+        ///         "path": "CategoryId",
+        ///         "op": "replace",
+        ///         "from": "string",
+        ///         "value": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+        ///     }
+        /// ]
         /// </remarks>
-        /// <param name="productRequestDto">UptadeProductCategoryRequestDto object</param>
+        /// <param name="jsonPatchProductDto">JsonPatchDocument<Product> object</param>
+        /// <param name="id">Guid object</param>
         /// <returns>Returns NoContent</returns>
         /// <response code="204">Success</response>
-        /// <response code="400">Product Failed to update</response>
-        /// <response code="404">The product or сatgori was not found</response>
-        [Route("сhange-сatgori")]
-        [HttpPut]
+        /// <response code="400">Product failed to update</response>
+        /// <response code="404">The product or сategory was not found</response>
+        [HttpPatch("сhange-сategory/{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> СhangeCatgoriIdAsync([FromBody] UptadeProductCategoryRequestDto productRequestDto, CancellationToken cancellationToken)
+        public async Task<IActionResult> СhangeCategoryIdAsync([FromBody] JsonPatchDocument<Product> jsonPatchProductDto, Guid id, CancellationToken cancellationToken)
         {
-            var command = new UpdateProductCategoryCommand() { UptadeProductCategoryRequestDto = productRequestDto };
+            var command = new UpdateProductCategoryCommand() { JsonPatchProductDto = jsonPatchProductDto, ProductId = id };
 
             await _mediator.Send(command, cancellationToken);
 
@@ -163,25 +173,30 @@ namespace Catalog.WebApi.Controllers
         /// </summary>
         /// <remarks>
         /// Sample request:
-        /// PUT /api/products/сhange-manufacturer
-        /// {
-        ///     "id": "7200f6a3-132c-46c9-8b9f-27b9b3c2d122"
-        ///     "newManufacturerId": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
-        /// }
+        /// PUT /api/products/сhange-manufacturer/7200f6a3-132c-46c9-8b9f-27b9b3c2d122
+        /// [
+        ///     {
+        ///         "operationType": 0,
+        ///         "path": "ManufacturerId",
+        ///         "op": "replace",
+        ///         "from": "string",
+        ///         "value": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+        ///     }
+        /// ]
         /// </remarks>
-        /// <param name="productRequestDto">UptadeProductRequestDto object</param>
+        /// <param name="jsonPatchProductDto">JsonPatchDocument<Product> object</param>
+        /// <param name="id">Guid object</param>
         /// <returns>Returns NoContent</returns>
         /// <response code="204">Success</response>
-        /// <response code="400">Product Failed to update</response>
+        /// <response code="400">Product failed to update</response>
         /// <response code="404">The product or manufacturer was not found</response>
-        [Route("сhange-manufacturer")]
-        [HttpPut]
+        [HttpPatch("сhange-manufacturer")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> СhangeCatgoriIdAsync([FromBody] UptadeProductManufacturerRequestDto productRequestDto, CancellationToken cancellationToken)
+        public async Task<IActionResult> СhangeManufacturerIdAsync([FromBody] JsonPatchDocument<Product> jsonPatchProductDto, Guid id, CancellationToken cancellationToken)
         {
-            var command = new UpdateProductManufacturerCommand() { UptadeProductManufacturerRequestDto = productRequestDto };
+            var command = new UpdateProductManufacturerCommand() { JsonPatchProductDto = jsonPatchProductDto, ProductId = id };
 
             await _mediator.Send(command, cancellationToken);
 
@@ -200,8 +215,7 @@ namespace Catalog.WebApi.Controllers
         /// <response code="204">Success</response>
         /// <response code="400">Product Failed to delete</response>
         /// <response code="404">The product was not found</response>
-        [HttpDelete]
-        [Route("{id}")]
+        [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]

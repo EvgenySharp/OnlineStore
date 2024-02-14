@@ -2,6 +2,7 @@
 using Catalog.Domain.Entities;
 using Catalog.Persistence.Abstractions.Interfaces;
 using Catalog.Persistence.Exceptions;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.EntityFrameworkCore;
 
 namespace Catalog.Persistence.Repositores
@@ -17,78 +18,84 @@ namespace Catalog.Persistence.Repositores
 
         public async Task<RepositoryResult> CreateAsync(Category category, CancellationToken cancellationToken)
         {
-            var addResult = await _dbContext.Category.AddAsync(category);
+            var addResult = await _dbContext.Categories.AddAsync(category, cancellationToken);
 
             if (addResult.State is not EntityState.Added)
             {
                 return new RepositoryResult(false, new CategoryStateException(addResult.State.ToString()));
             }
 
-            await _dbContext.SaveChangesAsync();
+            await SaveChangesAsync(cancellationToken);
 
             return new RepositoryResult(true);
         }
 
         public async Task<IEnumerable<Category>> GetAllAsync(int pageSize, int pageNumber, CancellationToken cancellationToken)
         {
-            var listOfCategory = await _dbContext.Category
+            var listOfCategory = await _dbContext.Categories
+                .AsNoTracking()
                 .Skip(pageSize * (pageNumber - 1))
                 .Take(pageSize)
                 .OrderByDescending(c => c.Title)
-                .ToListAsync();
+                .ToListAsync(cancellationToken);
 
             return listOfCategory;
         }
 
         public async Task<Category?> FindByIdAsync(Guid categoryId, CancellationToken cancellationToken)
         {
-            var category = await _dbContext.Category.AsTracking().FirstOrDefaultAsync(category => category.Id == categoryId);
+            var category = await _dbContext.Categories.AsTracking().FirstOrDefaultAsync(category => category.Id == categoryId, cancellationToken);
 
             return category;
         }
 
         public async Task<Category?> FindByTitleAsync(string categoryTitle, CancellationToken cancellationToken)
         {
-            var category = await _dbContext.Category.FirstOrDefaultAsync(category => category.Title == categoryTitle);
+            var category = await _dbContext.Categories.FirstOrDefaultAsync(category => category.Title == categoryTitle, cancellationToken);
 
             return category;
         }
 
-        public async Task<RepositoryResult> ChangeTitleAsync(Category category, string newTitle, CancellationToken cancellationToken)
+        public async Task<RepositoryResult> UpdateAsync(Category category, JsonPatchDocument<Category> request, CancellationToken cancellationToken)
         {
-            category.Title = newTitle;
+            request.ApplyTo(category);
 
-            await _dbContext.SaveChangesAsync();
+            await SaveChangesAsync(cancellationToken);
 
             return new RepositoryResult(true);
         }
 
         public async Task<RepositoryResult> DeleteAsync(Category category, CancellationToken cancellationToken)
         {
-            await ResetCategory(category);
+            await ResetCategory(category, cancellationToken);
 
-            var deleteResult = _dbContext.Category.Remove(category);
+            var deleteResult = _dbContext.Categories.Remove(category);
 
             if (deleteResult.State is not EntityState.Deleted)
             {
                 return new RepositoryResult(false, new CategoryStateException(deleteResult.State.ToString()));
             }
 
-            await _dbContext.SaveChangesAsync();
+            await SaveChangesAsync(cancellationToken);
 
             return new RepositoryResult(true);
         }
 
-        private async Task ResetCategory(Category category)
+        private async Task ResetCategory(Category category, CancellationToken cancellationToken)
         {
             await _dbContext.Entry(category)
                 .Collection(m => m.Products)
-                .LoadAsync();
+                .LoadAsync(cancellationToken);
 
             foreach (var product in category.Products)
             {
                 product.ManufacturerId = null;
             }
+        }
+
+        private async Task SaveChangesAsync(CancellationToken cancellationToken)
+        {
+            await _dbContext.SaveChangesAsync(cancellationToken);
         }
     }
 }

@@ -6,6 +6,7 @@ namespace Catalog.Application.Manufacturers.Queries.GetManufacturerList
 {
     public class GetManufacturerListQuery : IRequest<IEnumerable<GetManufacturerResponseDto>>
     {
-        public GetManufacturerRequestDto GetManufacturerRequestDto;
+        public int PageCount { get; set; }
+        public int PageSize { get; set; }
     }
 }

@@ -31,6 +31,8 @@ namespace Catalog.Application.Categories.Commands.CreateCategories
             }
 
             var newCategory = _mapper.Map<Category>(categoryRequestDto);
+            newCategory.Id = Guid.NewGuid();
+
             var categoryCreationResult = await _categoryRepository.CreateAsync(newCategory, cancellationToken);
 
             if (!categoryCreationResult.Succeeded)

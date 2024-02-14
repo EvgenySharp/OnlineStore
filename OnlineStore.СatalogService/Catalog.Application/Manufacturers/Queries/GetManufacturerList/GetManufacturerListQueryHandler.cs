@@ -20,8 +20,7 @@ namespace Catalog.Application.Manufacturers.Queries.GetManufacturerList
 
         public async Task<IEnumerable<GetManufacturerResponseDto>> Handle(GetManufacturerListQuery request, CancellationToken cancellationToken)
         {
-            var manufacturerDto = request.GetManufacturerRequestDto;
-            var manufacturerList = await _manufacturerRepository.GetAllAsync(manufacturerDto.PageSize, manufacturerDto.PageCount, cancellationToken);
+            var manufacturerList = await _manufacturerRepository.GetAllAsync(request.PageSize, request.PageCount, cancellationToken);
             var manufacturerResponseDtoList = _mapper.Map<List<GetManufacturerResponseDto>>(manufacturerList);
 
             return manufacturerResponseDtoList;

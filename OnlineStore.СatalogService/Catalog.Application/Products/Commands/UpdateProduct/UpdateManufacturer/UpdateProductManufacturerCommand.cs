@@ -1,10 +1,12 @@
-﻿using Catalog.Application.DTOs.RequestDtos.Products;
+﻿using Catalog.Domain.Entities;
 using MediatR;
+using Microsoft.AspNetCore.JsonPatch;
 
 namespace Catalog.Application.Products.Commands.UpdateProduct.UpdateManufacturer
 {
     public class UpdateProductManufacturerCommand : IRequest
     {
-        public UptadeProductManufacturerRequestDto UptadeProductManufacturerRequestDto { get; set; }
+        public Guid ProductId { get; set; }
+        public JsonPatchDocument<Product> JsonPatchProductDto { get; set; }
     }
 }

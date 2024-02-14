@@ -6,6 +6,7 @@ namespace Catalog.Application.Products.Queries.GetProductList
 {
     public class GetProductListQueries : IRequest<IEnumerable<GetProductResponseDto>>
     {
-        public GetProductRequestDto GetProductRequestDto { get; set; }
+        public int PageCount { get; set; }
+        public int PageSize { get; set; }
     }
 }

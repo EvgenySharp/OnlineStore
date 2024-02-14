@@ -15,15 +15,14 @@ namespace Catalog.Application.Products.Commands.UpdateProduct.UpdateTitle
 
         public async Task<Unit> Handle(UpdateProductTitleCommand request, CancellationToken cancellationToken)
         {
-            var productRequestDto = request.UptadeProductTitleRequestDto;
-            var foundProduct = await _productRepository.FindByIdAsync(productRequestDto.Id, cancellationToken);
+            var foundProduct = await _productRepository.FindByIdAsync(request.ProductId, cancellationToken);
 
             if (foundProduct is null)
             {
                 throw new ProductNotFoundException();
             }
 
-            var productChangeResult = await _productRepository.ChangeTitleAsync(foundProduct, productRequestDto.NewTiitle, cancellationToken);
+            var productChangeResult = await _productRepository.UpdateAsync(foundProduct, request.JsonPatchProductDto, cancellationToken);
 
             if (!productChangeResult.Succeeded)
             {

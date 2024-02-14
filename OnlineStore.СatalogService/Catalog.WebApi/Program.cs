@@ -3,7 +3,6 @@ using Catalog.Domain.Extensions;
 using Catalog.Persistence.Extensions;
 using Catalog.WebApi.Middlewares;
 using Microsoft.Extensions.Logging.ApplicationInsights;
-using SharpGrip.FluentValidation.AutoValidation.Mvc.Extensions;
 
 namespace Catalog.WebApi
 {
@@ -18,19 +17,17 @@ namespace Catalog.WebApi
 
             services.ConfigureDatabase(configuration);
 
-            builder.Logging.AddFilter<ApplicationInsightsLoggerProvider>("your-category", LogLevel.Trace);
             services.AddTransient<ExceptionHandlerMiddleware>();
 
-            services.AddServices();
+            services.AddRepositories();
 
             services.AddSwaggerGen();
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
             services.AddApplication();
-            services.AddControllers();
+            services.AddControllers().AddNewtonsoftJson();
 
             services.AddValidatorsConfiguration();
-            services.AddFluentValidationAutoValidation();
 
             services.AddRouting(options => options.LowercaseUrls = true);
 

@@ -20,8 +20,7 @@ namespace Catalog.Application.Categories.Queries.GetCategoryList
 
         public async Task<IEnumerable<GetCategoryResponseDto>> Handle(GetCategoryListQuery request, CancellationToken cancellationToken)
         {
-            var categoryDto = request.GetCategoryRequestDto;
-            var categoryList = await _categoryRepository.GetAllAsync(categoryDto.PageSize, categoryDto.PageCount, cancellationToken);
+            var categoryList = await _categoryRepository.GetAllAsync(request.PageSize, request.PageCount, cancellationToken);
             var categoryResponseDtoList = _mapper.Map<List<GetCategoryResponseDto>>(categoryList);
 
             return categoryResponseDtoList;
