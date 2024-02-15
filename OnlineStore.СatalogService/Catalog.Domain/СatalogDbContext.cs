@@ -1,5 +1,7 @@
 ﻿using Catalog.Domain.Entities;
+using Catalog.Domain.EntityTypeConfigurations;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Catalog.Domain
 {
@@ -10,5 +12,13 @@ namespace Catalog.Domain
         public DbSet<Product> Products { get; set; }
 
         public СatalogDbContext(DbContextOptions<СatalogDbContext> options) : base(options) { }
+
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            builder.ApplyConfiguration(new CategoryConfiguration());
+            builder.ApplyConfiguration(new ManufacturerConfiguration());
+            builder.ApplyConfiguration(new ProductConfiguration());
+            base.OnModelCreating(builder);
+        }
     }
 }
