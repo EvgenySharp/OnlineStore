@@ -1,7 +1,6 @@
 ﻿using Catalog.Domain.Entities;
 using Catalog.Domain.EntityTypeConfigurations;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
 
 namespace Catalog.Domain
 {
