@@ -14,7 +14,7 @@ namespace Auth.WebApi
 
             var services = builder.Services;
             var configuration = builder.Configuration;
-
+            services.AddCors();
             services.ConfigureDatabase(configuration);
             services.ConfigureIdentity();
 
@@ -34,10 +34,15 @@ namespace Auth.WebApi
             services.AddFluentValidationAutoValidation();
 
             services.AddRouting(options => options.LowercaseUrls = true);
+
             var app = builder.Build();
 
             app.UseSwagger();
             app.UseSwaggerUI();
+
+            app.UseCors(options => options.WithOrigins("http://localhost:4200")
+                .AllowAnyMethod()
+                .AllowAnyHeader());
 
             app.UseHttpsRedirection();
             app.UseAuthorization();
