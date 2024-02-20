@@ -99,7 +99,7 @@ namespace Catalog.WebApi.Controllers
         /// </summary>
         /// <remarks>
         /// Sample request:
-        /// PUT /api/categories/27fbb7ae-297f-4403-80fb-0da3a0312198
+        /// Patch /api/categories/27fbb7ae-297f-4403-80fb-0da3a0312198
         /// [
         ///     {
         ///         "operationType": 0,

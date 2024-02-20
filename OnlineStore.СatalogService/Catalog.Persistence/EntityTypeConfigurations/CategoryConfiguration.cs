@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Catalog.Domain.EntityTypeConfigurations
+namespace Catalog.Persistence.EntityTypeConfigurations
 {
     public class CategoryConfiguration : IEntityTypeConfiguration<Category>
     {

@@ -1,8 +1,8 @@
 ﻿using Catalog.Domain.Entities;
-using Catalog.Domain.EntityTypeConfigurations;
+using Catalog.Persistence.EntityTypeConfigurations;
 using Microsoft.EntityFrameworkCore;
 
-namespace Catalog.Domain
+namespace Catalog.Persistence
 {
     public class СatalogDbContext : DbContext
     {

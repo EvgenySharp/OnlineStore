@@ -1,8 +1,6 @@
 using Catalog.Application.Extensions;
-using Catalog.Domain.Extensions;
 using Catalog.Persistence.Extensions;
 using Catalog.WebApi.Middlewares;
-using Microsoft.Extensions.Logging.ApplicationInsights;
 
 namespace Catalog.WebApi
 {

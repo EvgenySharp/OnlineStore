@@ -103,7 +103,7 @@ namespace Catalog.WebApi.Controllers
         /// </summary>
         /// <remarks>
         /// Sample request:
-        /// PUT /api/products/rename/7200f6a3-132c-46c9-8b9f-27b9b3c2d122
+        /// Patch /api/products/title/7200f6a3-132c-46c9-8b9f-27b9b3c2d122
         /// [
         ///     {
         ///         "operationType": 0,
@@ -120,7 +120,7 @@ namespace Catalog.WebApi.Controllers
         /// <response code="204">Success</response>
         /// <response code="400">Product failed to update</response>
         /// <response code="404">The product was not found</response>
-        [HttpPatch("rename/{id}")]
+        [HttpPatch("title/{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -138,7 +138,7 @@ namespace Catalog.WebApi.Controllers
         /// </summary>
         /// <remarks>
         /// Sample request:
-        /// PUT /api/products/сhange-сategory/7200f6a3-132c-46c9-8b9f-27b9b3c2d122
+        /// Patch /api/products/categories/7200f6a3-132c-46c9-8b9f-27b9b3c2d122
         /// [
         ///     {
         ///         "operationType": 0,
@@ -155,7 +155,7 @@ namespace Catalog.WebApi.Controllers
         /// <response code="204">Success</response>
         /// <response code="400">Product failed to update</response>
         /// <response code="404">The product or сategory was not found</response>
-        [HttpPatch("update-сategory/{id}")]
+        [HttpPatch("categories/{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -173,7 +173,7 @@ namespace Catalog.WebApi.Controllers
         /// </summary>
         /// <remarks>
         /// Sample request:
-        /// PUT /api/products/сhange-manufacturer/7200f6a3-132c-46c9-8b9f-27b9b3c2d122
+        /// Patch /api/products/manufacturers/7200f6a3-132c-46c9-8b9f-27b9b3c2d122
         /// [
         ///     {
         ///         "operationType": 0,
@@ -190,7 +190,7 @@ namespace Catalog.WebApi.Controllers
         /// <response code="204">Success</response>
         /// <response code="400">Product failed to update</response>
         /// <response code="404">The product or manufacturer was not found</response>
-        [HttpPatch("update-manufacturer/{id}")]
+        [HttpPatch("manufacturers/{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]

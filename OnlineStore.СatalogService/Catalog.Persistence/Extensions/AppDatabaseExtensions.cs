@@ -2,7 +2,7 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Catalog.Domain.Extensions
+namespace Catalog.Persistence.Extensions
 {
     public static class AppDatabaseExtensions
     {
@@ -10,7 +10,7 @@ namespace Catalog.Domain.Extensions
         {
             var connectionString = configuration.GetConnectionString("DefaultConnection");
             services.AddDbContext<СatalogDbContext>(options =>
-                options.UseSqlServer(connectionString, dbContext => dbContext.MigrationsAssembly("Catalog.Domain")));
+                options.UseSqlServer(connectionString, dbContext => dbContext.MigrationsAssembly("Catalog.Persistence")));
 
             return services;
         }

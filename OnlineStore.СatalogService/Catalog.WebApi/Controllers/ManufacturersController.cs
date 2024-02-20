@@ -100,7 +100,7 @@ namespace Catalog.WebApi.Controllers
         /// </summary>
         /// <remarks>
         /// Sample request:
-        /// PUT /api/manufacturers/7200f6a3-132c-46c9-8b9f-27b9b3c2d122
+        /// Patch /api/manufacturers/7200f6a3-132c-46c9-8b9f-27b9b3c2d122
         /// [
         ///     {
         ///         "operationType": 0,
