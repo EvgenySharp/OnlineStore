@@ -46,7 +46,7 @@ namespace Auth.BuisnessLayer.Services
             }
 
             var loginUserResponseDto = _mapper.Map<LoginUserResponseDto>(userEntity);
-
+            
             _tokenService.SetJwtToken(loginUserResponseDto, cancellationToken);
             
             return loginUserResponseDto;
