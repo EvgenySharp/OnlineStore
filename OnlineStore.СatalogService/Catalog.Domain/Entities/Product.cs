@@ -8,5 +8,8 @@
         public Category? Category { get; set; }
         public Guid? ManufacturerId { get; set; }
         public Manufacturer? Manufacturer { get; set; }
+        public bool IsDiscount { get; set; }
+        public decimal Price { get; set; }
+        public DateTime AddingDate { get; set; }
     }
 }

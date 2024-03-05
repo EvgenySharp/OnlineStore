@@ -1,8 +1,8 @@
 ﻿using Catalog.Application.Categories.Commands.CreateCategories;
 using Catalog.Application.Categories.Commands.DeleteCategory;
 using Catalog.Application.Categories.Commands.UpdateCategory;
-using Catalog.Application.Categories.Queries.GetCategoryDetails;
 using Catalog.Application.Categories.Queries.GetCategoryList;
+using Catalog.Application.Categories.Queries.GetCategoryDetails;
 using Catalog.Application.DTOs.RequestDtos.Categories;
 using Catalog.Domain.Entities;
 using MediatR;
@@ -60,13 +60,33 @@ namespace Catalog.WebApi.Controllers
         /// <response code="200">Success</response>
         [HttpPost("page")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetAllAsync([FromQuery] int pageSize, [FromQuery] int pageCount, CancellationToken cancellationToken)
+        public async Task<IActionResult> GetPageAsync([FromQuery] int pageSize, [FromQuery] int pageCount, CancellationToken cancellationToken)
         {
-            var command = new GetCategoryListQuery() 
+            var command = new GetCategoryPageQuery() 
             { 
                 PageSize = pageSize,
                 PageCount = pageCount
             };
+            var listOfCategory = await _mediator.Send(command, cancellationToken);
+
+            return Ok(listOfCategory);
+        }
+
+        /// <summary>
+        /// Gets the list of category
+        /// </summary>
+        /// <remarks>
+        /// Sample request:
+        /// Post /api/categories
+        /// </remarks>
+        /// <returns>ListOfCategory (<IEnumerable<GetCategoryResponseDto>>)</returns>
+        /// <response code="200">Success</response>
+        [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetAllAsync(CancellationToken cancellationToken)
+        {
+            var command = new GetCategoryListQuery();
+
             var listOfCategory = await _mediator.Send(command, cancellationToken);
 
             return Ok(listOfCategory);
@@ -83,7 +103,7 @@ namespace Catalog.WebApi.Controllers
         /// <returns>Category (GetCategoryResponseDto)</returns>
         /// <response code="200">Success</response>
         /// <response code="404">The category was not found</response>
-        [HttpGet("{id}")]
+        [HttpGet("category/{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetByIdAsync(Guid id, CancellationToken cancellationToken)
@@ -116,7 +136,7 @@ namespace Catalog.WebApi.Controllers
         /// <response code="204">Success</response>
         /// <response code="400">Category failed to update</response>
         /// <response code="404">The category was not found</response>
-        [HttpPatch("{id}")]
+        [HttpPatch("category/{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -141,7 +161,7 @@ namespace Catalog.WebApi.Controllers
         /// <response code="204">Success</response>
         /// <response code="400">Category Failed to delete</response>
         /// <response code="404">The category was not found</response>
-        [HttpDelete("{id}")]
+        [HttpDelete("category/{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]

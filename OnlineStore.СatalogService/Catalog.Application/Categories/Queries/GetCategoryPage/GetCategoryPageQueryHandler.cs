@@ -5,12 +5,12 @@ using MediatR;
 
 namespace Catalog.Application.Categories.Queries.GetCategoryList
 {
-    public class GetCategoryListQueryHandler : IRequestHandler<GetCategoryListQuery, IEnumerable<GetCategoryResponseDto>>
+    public class GetCategoryPageQueryHandler : IRequestHandler<GetCategoryPageQuery, IEnumerable<GetCategoryResponseDto>>
     {
         private readonly ICategoryRepository _categoryRepository;
         private readonly IMapper _mapper;
 
-        public GetCategoryListQueryHandler(
+        public GetCategoryPageQueryHandler(
             ICategoryRepository categoryRepository,
             IMapper mapper)
         {
@@ -18,9 +18,9 @@ namespace Catalog.Application.Categories.Queries.GetCategoryList
             _mapper = mapper;
         }
 
-        public async Task<IEnumerable<GetCategoryResponseDto>> Handle(GetCategoryListQuery request, CancellationToken cancellationToken)
+        public async Task<IEnumerable<GetCategoryResponseDto>> Handle(GetCategoryPageQuery request, CancellationToken cancellationToken)
         {
-            var categoryList = await _categoryRepository.GetAllAsync(cancellationToken);
+            var categoryList = await _categoryRepository.GetPageAsync(request.PageSize, request.PageCount, cancellationToken);
             var categoryResponseDtoList = _mapper.Map<List<GetCategoryResponseDto>>(categoryList);
 
             return categoryResponseDtoList;

@@ -14,7 +14,11 @@ namespace Catalog.Application.Mappings.Products
                 .ForMember(entityProtuct => entityProtuct.CategoryId,
                     opt => opt.MapFrom(productForMap => productForMap.CategoryId))
                 .ForMember(entityProtuct => entityProtuct.ManufacturerId,
-                    opt => opt.MapFrom(productForMap => productForMap.ManufacturerId));
+                    opt => opt.MapFrom(productForMap => productForMap.ManufacturerId))
+                .ForMember(entityProtuct => entityProtuct.IsDiscount,
+                    opt => opt.MapFrom(productForMap => productForMap.IsDiscount))
+                .ForMember(entityProtuct => entityProtuct.Price,
+                    opt => opt.MapFrom(productForMap => productForMap.Price));
 
         }
     }

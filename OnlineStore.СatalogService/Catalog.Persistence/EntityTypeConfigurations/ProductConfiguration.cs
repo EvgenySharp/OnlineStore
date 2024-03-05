@@ -21,6 +21,15 @@ namespace Catalog.Persistence.EntityTypeConfigurations
             builder.HasOne(e => e.Manufacturer)
                .WithMany()
                .HasForeignKey(e => e.ManufacturerId);
+
+            builder.Property(p => p.IsDiscount)
+                .IsRequired();
+
+            builder.Property(p => p.Price)
+                .IsRequired();
+
+            builder.Property(p => p.AddingDate)
+                .IsRequired();
         }
     }
 }

@@ -2,6 +2,7 @@
 using Catalog.Application.Manufacturers.Commands.CreateManufacturer;
 using Catalog.Application.Manufacturers.Commands.DeleteManufacturer;
 using Catalog.Application.Manufacturers.Commands.UpdateBook;
+using Catalog.Application.Manufacturers.Queries.Get;
 using Catalog.Application.Manufacturers.Queries.GetManufacturerDetails;
 using Catalog.Application.Manufacturers.Queries.GetManufacturerList;
 using Catalog.Domain.Entities;
@@ -61,9 +62,9 @@ namespace Catalog.WebApi.Controllers
         /// <response code="200">Success</response>
         [HttpPost("page")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetAllAsync([FromQuery] int pageSize, [FromQuery] int pageCount, CancellationToken cancellationToken)
+        public async Task<IActionResult> GetPageAsync([FromQuery] int pageSize, [FromQuery] int pageCount, CancellationToken cancellationToken)
         {
-            var command = new GetManufacturerListQuery()
+            var command = new GetManufacturerPageQuery()
             {
                 PageSize = pageSize,
                 PageCount = pageCount
@@ -71,6 +72,26 @@ namespace Catalog.WebApi.Controllers
             var listOfManufacturer = await _mediator.Send(command, cancellationToken);
 
             return Ok(listOfManufacturer);
+        }
+
+        /// <summary>
+        /// Gets the list of manufacturer
+        /// </summary>
+        /// <remarks>
+        /// Sample request:
+        /// Get /api/manufacturers
+        /// </remarks>
+        /// <returns>ListOfManufacturer (<IEnumerable<GetManufacturerResponseDto>>)</returns>
+        /// <response code="200">Success</response>
+        [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetAllAsync(CancellationToken cancellationToken)
+        {
+            var command = new GetManufacturerListQuery();
+
+            var listOfCategory = await _mediator.Send(command, cancellationToken);
+
+            return Ok(listOfCategory);
         }
 
         /// <summary>
@@ -84,7 +105,7 @@ namespace Catalog.WebApi.Controllers
         /// <returns>Manufacturer (GetManufacturerResponseDto)</returns>
         /// <response code="200">Success</response>
         /// <response code="404">The manufacturer was not found</response>
-        [HttpGet("{id}")]
+        [HttpGet("manufacturer/{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetByIdAsync(Guid id, CancellationToken cancellationToken)
@@ -117,7 +138,7 @@ namespace Catalog.WebApi.Controllers
         /// <response code="204">Success</response>
         /// <response code="400">Manufacturer failed to update</response>
         /// <response code="404">The manufacturer was not found</response>
-        [HttpPatch("{id}")]
+        [HttpPatch("manufacturer/{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -142,7 +163,7 @@ namespace Catalog.WebApi.Controllers
         /// <response code="204">Success</response>
         /// <response code="400">Manufacturer Failed to delete</response>
         /// <response code="404">The manufacturer was not found</response>
-        [HttpDelete("{id}")]
+        [HttpDelete("manufacturer/{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]

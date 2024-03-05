@@ -1,53 +1,38 @@
-﻿using Azure.Core;
-using Catalog.Domain;
-using Catalog.Domain.Entities;
+﻿using Catalog.Domain.Entities;
 using Catalog.Persistence.Abstractions.Interfaces;
-using Catalog.Persistence.Exceptions;
-using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.EntityFrameworkCore;
 
 namespace Catalog.Persistence.Repositores
 {
-    public class ProductRepository : IProductRepository
+    public class ProductRepository : BaseRepository<Product>, IProductRepository
     {
         private readonly СatalogDbContext _dbContext;
 
-        public ProductRepository(СatalogDbContext dbContext)
+        public ProductRepository(СatalogDbContext dbContext) : base(dbContext)
         {
             _dbContext = dbContext;
         }
 
-        public async Task<RepositoryResult> CreateAsync(Product product, CancellationToken cancellationToken)
+        public async Task<IEnumerable<Product>> GetPageAsync(int pageSize, int pageNumber, Guid categoryId, List<Guid> manufacturerIds, CancellationToken cancellationToken)
         {
-            var addResult = await _dbContext.Products.AddAsync(product, cancellationToken);
+            var query = _dbContext.Products.AsNoTracking();
 
-            if (addResult.State is not EntityState.Added)
+            if (categoryId != Guid.Empty)
             {
-                return new RepositoryResult(false, new ProductStateException(addResult.State.ToString()));
+                query = query.Where(p => p.CategoryId == categoryId);
             }
 
-            await SaveChangesAsync(cancellationToken);
+            if (manufacturerIds.Count != 0)
+            {
+                query = query.Where(p => manufacturerIds.Contains(p.ManufacturerId.Value));
+            }
 
-            return new RepositoryResult(true);
-        }
-
-        public async Task<IEnumerable<Product>> GetAllAsync(int pageSize, int pageNumber, CancellationToken cancellationToken)
-        {
-            var listOfProducts = await _dbContext.Products
-                .AsNoTracking()
+            query = query
                 .Skip(pageSize * (pageNumber - 1))
                 .Take(pageSize)
-                .OrderByDescending(m => m.Title)
-                .ToListAsync(cancellationToken);
+                .OrderByDescending(m => m.Title);
 
-            return listOfProducts;
-        }
-
-        public async Task<Product?> FindByIdAsync(Guid productId, CancellationToken cancellationToken)
-        {
-            var product = await _dbContext.Products.AsTracking().FirstOrDefaultAsync(product => product.Id == productId, cancellationToken);
-
-            return product;
+            return await query.ToListAsync(cancellationToken);
         }
 
         public async Task<Product?> FindByTitleAsync(string productTitle, CancellationToken cancellationToken)
@@ -55,34 +40,6 @@ namespace Catalog.Persistence.Repositores
             var product = await _dbContext.Products.FirstOrDefaultAsync(product => product.Title == productTitle, cancellationToken);
 
             return product;
-        }
-
-        public async Task<RepositoryResult> UpdateAsync(Product product, JsonPatchDocument<Product> request, CancellationToken cancellationToken)
-        {
-            request.ApplyTo(product);
-
-            await SaveChangesAsync(cancellationToken);
-
-            return new RepositoryResult(true);
-        }
-
-        public async Task<RepositoryResult> DeleteAsync(Product product, CancellationToken cancellationToken)
-        {
-            var deleteResult = _dbContext.Products.Remove(product);
-
-            if (deleteResult.State is not EntityState.Deleted)
-            {
-                return new RepositoryResult(false, new ProductStateException(deleteResult.State.ToString()));
-            }
-
-            await SaveChangesAsync(cancellationToken);
-
-            return new RepositoryResult(true);
-        }
-
-        private async Task SaveChangesAsync(CancellationToken cancellationToken)
-        {
-            await _dbContext.SaveChangesAsync(cancellationToken);
         }
     }
 }

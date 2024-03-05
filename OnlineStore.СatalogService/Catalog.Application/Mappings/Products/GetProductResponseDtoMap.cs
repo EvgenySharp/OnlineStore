@@ -16,7 +16,13 @@ namespace Catalog.Application.Mappings.Products
                 .ForMember(productDto => productDto.CategoryId,
                     opt => opt.MapFrom(entityProduct => entityProduct.CategoryId))
                 .ForMember(productDto => productDto.ManufacturerId,
-                    opt => opt.MapFrom(entityProduct => entityProduct.ManufacturerId));
+                    opt => opt.MapFrom(entityProduct => entityProduct.ManufacturerId))
+                .ForMember(productDto => productDto.AddingDate,
+                    opt => opt.MapFrom(entityProduct => entityProduct.AddingDate))
+                .ForMember(productDto => productDto.IsDiscount,
+                    opt => opt.MapFrom(entityProduct => entityProduct.IsDiscount))
+                .ForMember(productDto => productDto.Price,
+                    opt => opt.MapFrom(entityProduct => entityProduct.Price));
         }
     }
 }

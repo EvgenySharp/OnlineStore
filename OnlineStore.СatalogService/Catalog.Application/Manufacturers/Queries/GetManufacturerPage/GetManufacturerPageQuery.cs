@@ -4,7 +4,7 @@ using MediatR;
 
 namespace Catalog.Application.Manufacturers.Queries.GetManufacturerList
 {
-    public class GetManufacturerListQuery : IRequest<IEnumerable<GetManufacturerResponseDto>>
+    public class GetManufacturerPageQuery : IRequest<IEnumerable<GetManufacturerResponseDto>>
     {
         public int PageCount { get; set; }
         public int PageSize { get; set; }

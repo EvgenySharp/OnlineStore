@@ -32,6 +32,7 @@ namespace Catalog.Application.Products.Commands.CreateProduct
 
             var newProduct = _mapper.Map<Product>(productRequestDto);
             newProduct.Id = Guid.NewGuid();
+            newProduct.AddingDate = DateTime.Now;
 
             var productCreationResult = await _productRepository.CreateAsync(newProduct, cancellationToken);
 

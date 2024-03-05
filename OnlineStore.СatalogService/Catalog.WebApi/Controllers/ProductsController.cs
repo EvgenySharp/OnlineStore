@@ -64,12 +64,14 @@ namespace Catalog.WebApi.Controllers
         /// <response code="200">Success</response>
         [HttpPost("page")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetAllAsync([FromQuery] int pageSize, [FromQuery] int pageCount, CancellationToken cancellationToken)
+        public async Task<IActionResult> GetAllAsync([FromQuery] int pageSize, [FromQuery] int pageCount, CancellationToken cancellationToken, Guid Categoryid = default, List<Guid> Manufacturerid = default)
         {
-            var command = new GetProductListQueries()
+            var command = new GetProductPageQueries()
             {
                 PageSize = pageSize,
-                PageCount = pageCount
+                PageCount = pageCount,
+                Categoryid = Categoryid,
+                Manufacturerid = Manufacturerid
             };
             var listOfProduct = await _mediator.Send(command, cancellationToken);
 
@@ -87,7 +89,7 @@ namespace Catalog.WebApi.Controllers
         /// <returns>product (GetProductResponseDto)</returns>
         /// <response code="200">Success</response>
         /// <response code="404">The product was not found</response>
-        [HttpGet("{id}")]
+        [HttpGet("product/{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetByIdAsync(Guid id, CancellationToken cancellationToken)
@@ -155,7 +157,7 @@ namespace Catalog.WebApi.Controllers
         /// <response code="204">Success</response>
         /// <response code="400">Product failed to update</response>
         /// <response code="404">The product or сategory was not found</response>
-        [HttpPatch("categories/{id}")]
+        [HttpPatch("category/{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -190,7 +192,7 @@ namespace Catalog.WebApi.Controllers
         /// <response code="204">Success</response>
         /// <response code="400">Product failed to update</response>
         /// <response code="404">The product or manufacturer was not found</response>
-        [HttpPatch("manufacturers/{id}")]
+        [HttpPatch("manufacturer/{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -215,7 +217,7 @@ namespace Catalog.WebApi.Controllers
         /// <response code="204">Success</response>
         /// <response code="400">Product Failed to delete</response>
         /// <response code="404">The product was not found</response>
-        [HttpDelete("{id}")]
+        [HttpDelete("product/{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]

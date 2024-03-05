@@ -5,12 +5,12 @@ using MediatR;
 
 namespace Catalog.Application.Products.Queries.GetProductList
 {
-    public class GetProductListQueriesHandler : IRequestHandler<GetProductListQueries, IEnumerable<GetProductResponseDto>>
+    public class GetProductPageQueriesHandler : IRequestHandler<GetProductPageQueries, IEnumerable<GetProductResponseDto>>
     {
         private readonly IProductRepository _productRepository;
         private readonly IMapper _mapper;
 
-        public GetProductListQueriesHandler(
+        public GetProductPageQueriesHandler(
             IProductRepository productRepository,
             IMapper mapper)
         {
@@ -18,9 +18,9 @@ namespace Catalog.Application.Products.Queries.GetProductList
             _mapper = mapper;
         }
 
-        public async Task<IEnumerable<GetProductResponseDto>> Handle(GetProductListQueries request, CancellationToken cancellationToken)
+        public async Task<IEnumerable<GetProductResponseDto>> Handle(GetProductPageQueries request, CancellationToken cancellationToken)
         {
-            var productList = await _productRepository.GetAllAsync(request.PageSize, request.PageCount, cancellationToken);
+            var productList = await _productRepository.GetPageAsync(request.PageSize, request.PageCount, request.Categoryid, request.Manufacturerid, cancellationToken);
             var productResponseDtoList = _mapper.Map<List<GetProductResponseDto>>(productList);
 
             return productResponseDtoList;
