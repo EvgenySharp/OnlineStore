@@ -83,15 +83,15 @@ namespace Catalog.WebApi.Controllers
         /// </remarks>
         /// <returns>ListOfManufacturer (<IEnumerable<GetManufacturerResponseDto>>)</returns>
         /// <response code="200">Success</response>
-        [HttpGet]
+        [HttpGet("manufacturers")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<IActionResult> GetAllAsync(CancellationToken cancellationToken)
         {
             var command = new GetManufacturerListQuery();
 
-            var listOfCategory = await _mediator.Send(command, cancellationToken);
+            var listOfManufacturer = await _mediator.Send(command, cancellationToken);
 
-            return Ok(listOfCategory);
+            return Ok(listOfManufacturer);
         }
 
         /// <summary>

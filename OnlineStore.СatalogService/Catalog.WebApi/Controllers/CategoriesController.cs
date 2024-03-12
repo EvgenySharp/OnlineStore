@@ -81,7 +81,7 @@ namespace Catalog.WebApi.Controllers
         /// </remarks>
         /// <returns>ListOfCategory (<IEnumerable<GetCategoryResponseDto>>)</returns>
         /// <response code="200">Success</response>
-        [HttpGet]
+        [HttpGet("categories")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<IActionResult> GetAllAsync(CancellationToken cancellationToken)
         {
