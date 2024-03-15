@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Catalog.Application.DTOs.ResponseDtos.Products;
+using MediatR;
 
 namespace Catalog.Application.Products.Queries.GetProductDetails
 {
-    internal class GetProductListQueries
+    public class GetProductDetailsQueries : IRequest<GetProductResponseDto>
     {
+        public Guid Id { get; set; }
     }
 }
