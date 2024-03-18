@@ -1,0 +1,59 @@
+version: '3.4'
+
+networks:
+  backend:
+
+services:
+  
+  catalogDb:
+    container_name: catalog-db
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    networks:
+      - backend    
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=password@12345#
+    ports:
+      - 8003:1433
+
+  catalog.webapi:
+    container_name: catalog-api
+    image: ${DOCKER_REGISTRY-}catalogwebapi
+    build:
+      context: .
+      dockerfile: OnlineStore.СatalogService/Catalog.WebApi/Dockerfile
+    networks:
+      - backend
+    ports:
+      - 8004:80
+    environment:
+      - DB_Host=сatalogDb
+      - DB_Name=CatalogDb
+      - DB_SA_PASSWORD=password@12345#      
+  
+  authdb:
+    container_name: auth-db
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    networks:
+      - backend    
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=password@12345#
+    ports:
+      - 8001:1433
+
+  auth.webapi:
+    container_name: auth-api
+    image: ${DOCKER_REGISTRY-}authwebapi
+    build:
+      context: .
+      dockerfile: OnlineStore.AuthorizationService/Auth.WebApi/Dockerfile
+    networks:
+      - backend
+    ports:
+      - 8002:80
+    environment:
+      - DB_Host=authdb
+      - DB_Name=AuthDb
+      - DB_SA_PASSWORD=password@12345#
+
