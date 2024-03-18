@@ -26,10 +26,6 @@ services:
       - backend
     ports:
       - 8004:80
-    environment:
-      - DB_Host=сatalogDb
-      - DB_Name=CatalogDb
-      - DB_SA_PASSWORD=password@12345#      
   
   authdb:
     container_name: auth-db
@@ -52,8 +48,4 @@ services:
       - backend
     ports:
       - 8002:80
-    environment:
-      - DB_Host=authdb
-      - DB_Name=AuthDb
-      - DB_SA_PASSWORD=password@12345#
 
