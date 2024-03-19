@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.7.34009.444
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "OnlineStore.ApiGateway", "OnlineStore.ApiGateway", "{425873EB-A155-4A8D-A1EF-BAED6E79C352}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "OnlineStore", "OnlineStore", "{425873EB-A155-4A8D-A1EF-BAED6E79C352}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ocelot.WebApi", "OnlineStore.ApiGateway\Ocelot.WebApi\Ocelot.WebApi.csproj", "{79016462-E667-4726-BAA9-86E9470354F0}"
 EndProject
