@@ -9,20 +9,19 @@ namespace Ocelot.WebApi
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            builder.Configuration.AddJsonFile("ocelot.json", optional: false, reloadOnChange: true);
+            var configuration = builder.Configuration;
+
+            configuration.AddJsonFile("ocelot.json", optional: false, reloadOnChange: true);
 
             builder.Services.AddOcelot(builder.Configuration);
-            // Add services to the container.
 
             builder.Services.AddControllers();
 
             var app = builder.Build();
 
-            app.UseCors(options => options.WithOrigins("http://localhost:4200")
+            app.UseCors(options => options.WithOrigins(configuration.GetSection("Cors:Origins").Value)
                 .AllowAnyMethod()
                 .AllowAnyHeader());
-
-            // Configure the HTTP request pipeline.
 
             app.UseHttpsRedirection();
 
