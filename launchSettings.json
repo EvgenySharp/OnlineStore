@@ -5,7 +5,8 @@
       "commandVersion": "1.0",
       "serviceActions": {
         "catalog.webapi": "StartDebugging",
-        "auth.webapi": "StartDebugging"
+        "auth.webapi": "StartDebugging",
+        "ocelot.webapi": "StartDebugging"
       }
     }
   }

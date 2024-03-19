@@ -5,8 +5,8 @@
             "DownstreamScheme": "https",
             "DownstreamHostAndPorts": [
                 {
-                    "Host": "localhost",
-                    "Port": 7292
+                    "Host": "catalog.webapi",
+                    "Port": 80
                 }
             ],
             "UpstreamPathTemplate": "/catalog/categories/{everything}",
@@ -17,8 +17,8 @@
             "DownstreamScheme": "https",
             "DownstreamHostAndPorts": [
                 {
-                    "Host": "localhost",
-                    "Port": 7292
+                    "Host": "catalog.webapi",
+                    "Port": 80
                 }
             ],
             "UpstreamPathTemplate": "/catalog/manufacturers/{everything}",
@@ -29,8 +29,8 @@
             "DownstreamScheme": "https",
             "DownstreamHostAndPorts": [
                 {
-                    "Host": "localhost",
-                    "Port": 7292
+                    "Host": "catalog.webapi",
+                    "Port": 80
                 }
             ],
             "UpstreamPathTemplate": "/catalog/products/{everything}",
@@ -41,8 +41,8 @@
             "DownstreamScheme": "https",
             "DownstreamHostAndPorts": [
                 {
-                    "Host": "localhost",
-                    "Port": 7019
+                    "Host": "auth.webapi",
+                    "Port": 80
                 }
             ],
             "UpstreamPathTemplate": "/auth/{everything}",
@@ -53,8 +53,8 @@
             "DownstreamScheme": "https",
             "DownstreamHostAndPorts": [
                 {
-                    "Host": "localhost",
-                    "Port": 7019
+                    "Host": "auth.webapi",
+                    "Port": 80
                 }
             ],
             "UpstreamPathTemplate": "/auth/roles/{everything}",
@@ -65,12 +65,12 @@
             "DownstreamScheme": "https",
             "DownstreamHostAndPorts": [
                 {
-                    "Host": "localhost",
-                    "Port": 7019
+                    "Host": "auth.webapi",
+                    "Port": 80
                 }
             ],
             "UpstreamPathTemplate": "/auth/users/{everything}",
-            "UpstreamHttpMethod": [ "Get"]
+            "UpstreamHttpMethod": [ "Get" ]
         }
     ]
 }

@@ -24,8 +24,6 @@ services:
       dockerfile: OnlineStore.СatalogService/Catalog.WebApi/Dockerfile
     networks:
       - backend
-    ports:
-      - 8004:80
   
   authdb:
     container_name: auth-db
@@ -46,6 +44,15 @@ services:
       dockerfile: OnlineStore.AuthorizationService/Auth.WebApi/Dockerfile
     networks:
       - backend
+
+  ocelot.webapi:
+    container_name: api-gateway
+    image: ${DOCKER_REGISTRY-}ocelotwebapi
+    build:
+      context: .
+      dockerfile: OnlineStore.ApiGateway/Ocelot.WebApi/Dockerfile
     ports:
-      - 8002:80
+      - 8005:1433
+    networks:
+      - backend
 
