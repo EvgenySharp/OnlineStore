@@ -1,0 +1,58 @@
+version: '3.4'
+
+networks:
+  backend:
+
+services:
+  
+  catalogDb:
+    container_name: catalog-db
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    networks:
+      - backend    
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=password@12345#
+    ports:
+      - 8003:1433
+
+  catalog.webapi:
+    container_name: catalog-api
+    image: ${DOCKER_REGISTRY-}catalogwebapi
+    build:
+      context: .
+      dockerfile: OnlineStore.СatalogService/Catalog.WebApi/Dockerfile
+    networks:
+      - backend
+  
+  authdb:
+    container_name: auth-db
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    networks:
+      - backend    
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=password@12345#
+    ports:
+      - 8001:1433
+
+  auth.webapi:
+    container_name: auth-api
+    image: ${DOCKER_REGISTRY-}authwebapi
+    build:
+      context: .
+      dockerfile: OnlineStore.AuthorizationService/Auth.WebApi/Dockerfile
+    networks:
+      - backend
+
+  ocelot.webapi:
+    container_name: api-gateway
+    image: ${DOCKER_REGISTRY-}ocelotwebapi
+    build:
+      context: .
+      dockerfile: OnlineStore.ApiGateway/Ocelot.WebApi/Dockerfile
+    ports:
+      - 8005:1433
+    networks:
+      - backend
+

@@ -1,0 +1,76 @@
+{
+    "Routes": [
+        {
+            "DownstreamPathTemplate": "/api/categories/{everything}",
+            "DownstreamScheme": "https",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "catalog.webapi",
+                    "Port": 80
+                }
+            ],
+            "UpstreamPathTemplate": "/catalog/categories/{everything}",
+            "UpstreamHttpMethod": [ "Get" ]
+        },
+        {
+            "DownstreamPathTemplate": "/api/manufacturers/{everything}",
+            "DownstreamScheme": "https",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "catalog.webapi",
+                    "Port": 80
+                }
+            ],
+            "UpstreamPathTemplate": "/catalog/manufacturers/{everything}",
+            "UpstreamHttpMethod": [ "Get" ]
+        },
+        {
+            "DownstreamPathTemplate": "/api/products/{everything}",
+            "DownstreamScheme": "https",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "catalog.webapi",
+                    "Port": 80
+                }
+            ],
+            "UpstreamPathTemplate": "/catalog/products/{everything}",
+            "UpstreamHttpMethod": [ "Get", "Post" ]
+        },
+        {
+            "DownstreamPathTemplate": "/api/auth/{everything}",
+            "DownstreamScheme": "https",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "auth.webapi",
+                    "Port": 80
+                }
+            ],
+            "UpstreamPathTemplate": "/auth/{everything}",
+            "UpstreamHttpMethod": [ "Get", "Post" ]
+        },
+        {
+            "DownstreamPathTemplate": "/api/roles/{everything}",
+            "DownstreamScheme": "https",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "auth.webapi",
+                    "Port": 80
+                }
+            ],
+            "UpstreamPathTemplate": "/auth/roles/{everything}",
+            "UpstreamHttpMethod": [ "Get" ]
+        },
+        {
+            "DownstreamPathTemplate": "/api/users/{everything}",
+            "DownstreamScheme": "https",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "auth.webapi",
+                    "Port": 80
+                }
+            ],
+            "UpstreamPathTemplate": "/auth/users/{everything}",
+            "UpstreamHttpMethod": [ "Get" ]
+        }
+    ]
+}
