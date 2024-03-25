@@ -31,7 +31,7 @@ namespace Order.Infrastructure.Repositores
                 .SortBy(o => o.Id)
                 .Skip((pageCount - 1) * pageSize)
                 .Limit(pageSize)
-                .ToListAsync();
+                .ToListAsync(cancellationToken);
 
             return orders;
         }

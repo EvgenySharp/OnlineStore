@@ -37,7 +37,7 @@ namespace Order.WebApi.Controllers
         /// <response code="200">Success</response>
         /// <response code="400">The order failed to create</response>
         /// <response code="409">The order already exists</response>
-        [HttpPost("Order")]
+        [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]

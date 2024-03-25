@@ -41,7 +41,7 @@ namespace Order.Application.Services
             var orderEntity = _mapper.Map<OrderEntity>(orderDetailsResponseDto);
             var orderCreationResult = await _orderRepository.CreateAsync(orderEntity, cancellationToken);
 
-            if (!orderCreationResult.Succeeded)
+            if (!orderCreationResult.IsCompletedSuccessfully)
             {
                 throw new OrderCreationException();
             }
@@ -84,7 +84,7 @@ namespace Order.Application.Services
 
             var orderDeleteResult = await _orderRepository.DeleteAsync(orderId, cancellationToken);
 
-            if (!orderDeleteResult.Succeeded)
+            if (orderDeleteResult.DeletedCount is 0)
             {
                 throw new OredrDeleteException();
             }

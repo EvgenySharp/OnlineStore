@@ -1,11 +1,7 @@
-using FluentValidation;
 using FluentValidation.AspNetCore;
-using Microsoft.AspNetCore.Mvc;
 using Order.Application.Extensions;
 using Order.Infrastructure.Extensions;
-using Order.Application.Validation;
 using Order.WebApi.Middlewares;
-using Order.Infrastructure;
 
 namespace Order.WebApi
 {
