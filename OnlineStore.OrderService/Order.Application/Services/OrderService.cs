@@ -16,21 +16,25 @@ namespace Order.Application.Services
         private readonly IOrderRepository _orderRepository;
         private readonly IOrderDetailsService _orderDetailsService;
         private readonly IOrderProductsService _orderProductsService;
+        private readonly IMessageBrokerSecvice _messageBrokerSecvice;
 
         public OrderService(
             IMapper mapper,
             IOrderRepository orderRepository,
             IOrderDetailsService orderDetailsService,
-            IOrderProductsService orderProductsService)
+            IOrderProductsService orderProductsService,
+            IMessageBrokerSecvice messageBrokerSecvice)
         {
             _mapper = mapper;
             _orderRepository = orderRepository;
             _orderDetailsService = orderDetailsService;
             _orderProductsService = orderProductsService;
+            _messageBrokerSecvice = messageBrokerSecvice;
         }
 
         public async Task<CreateOrderResponseDto> СreateOrderAsync(CreateOrderRequestDto orderRequestDto, CancellationToken cancellationToken)
         {
+            _messageBrokerSecvice.SendMessage("orderRequestDto was create", "Create");
             var orderProductsRequestDto = _mapper.Map<CreateOrderProductsRequestDto>(orderRequestDto);
             var orderProductsResponseDto = await _orderProductsService.СreateOrderProductsAsync(orderProductsRequestDto, cancellationToken);
 

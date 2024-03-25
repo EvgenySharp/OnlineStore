@@ -2,6 +2,7 @@ using FluentValidation.AspNetCore;
 using Order.Application.Extensions;
 using Order.Infrastructure.Extensions;
 using Order.WebApi.Middlewares;
+using RabbitMQ.Client;
 
 namespace Order.WebApi
 {
@@ -21,6 +22,7 @@ namespace Order.WebApi
             services.AddRepositories();
 
             services.AddServices();
+            services.AddRabbitMQSettings(configuration);
 
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
