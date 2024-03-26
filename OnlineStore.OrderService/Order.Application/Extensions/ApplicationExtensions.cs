@@ -1,13 +1,9 @@
 ﻿using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Order.Application.Abstractions.Interfaces;
-using Order.Application.Options;
 using Order.Application.Services;
 using Order.Application.Validation;
-using Order.Infrastructure.Options;
-using RabbitMQ.Client;
 
 namespace Order.Application.Extensions
 {
@@ -18,15 +14,7 @@ namespace Order.Application.Extensions
             return services
                 .AddScoped<IOrderService, OrderService>()
                 .AddScoped<IOrderDetailsService, OrderDetailsService>()
-                .AddScoped<IOrderProductsService, OrderProductsService>()
-                .AddScoped<IMessageBrokerSecvice, MessageBrokerSecvice>();
-        }
-
-        public static IServiceCollection AddRabbitMQSettings(this IServiceCollection services, IConfiguration configuration)
-        {
-            services.Configure<RabbitMQSettings>(configuration.GetSection("RabbitMQSettings"));
-
-            return services;
+                .AddScoped<IOrderProductsService, OrderProductsService>();
         }
 
         public static IServiceCollection AddValidatorsConfiguration(this IServiceCollection services)
