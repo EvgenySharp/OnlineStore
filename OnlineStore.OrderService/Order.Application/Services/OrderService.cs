@@ -31,6 +31,7 @@ namespace Order.Application.Services
 
         public async Task<CreateOrderResponseDto> СreateOrderAsync(CreateOrderRequestDto orderRequestDto, CancellationToken cancellationToken)
         {
+            _messageBrokerSecvice.SendMessage("orderRequestDto was create", "Create");
             var orderProductsRequestDto = _mapper.Map<CreateOrderProductsRequestDto>(orderRequestDto);
             var orderProductsResponseDto = await _orderProductsService.СreateOrderProductsAsync(orderProductsRequestDto, cancellationToken);
 
@@ -47,8 +48,6 @@ namespace Order.Application.Services
             }
 
             var orderResponseDto = _mapper.Map<CreateOrderResponseDto>(orderEntity);
-
-            _messageBrokerSecvice.SendMessage($"order wiht id={orderResponseDto.Id} was create", "Create");
 
             return orderResponseDto;
         }
