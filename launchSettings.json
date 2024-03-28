@@ -6,7 +6,8 @@
       "serviceActions": {
         "catalog.webapi": "StartDebugging",
         "auth.webapi": "StartDebugging",
-        "ocelot.webapi": "StartDebugging"
+        "ocelot.webapi": "StartDebugging",
+        "order.webapi": "StartDebugging"
       }
     }
   }

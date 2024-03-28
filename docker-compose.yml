@@ -7,14 +7,14 @@ services:
   
   catalogDb:
     container_name: catalog-db
-    image: mcr.microsoft.com/mssql/server:2022-latest
-    networks:
-      - backend    
+    image: mcr.microsoft.com/mssql/server:2022-latest  
     environment:
       - ACCEPT_EULA=Y
       - SA_PASSWORD=password@12345#
     ports:
       - 8003:1433
+    networks:
+      - backend  
 
   catalog.webapi:
     container_name: catalog-api
@@ -28,13 +28,13 @@ services:
   authdb:
     container_name: auth-db
     image: mcr.microsoft.com/mssql/server:2022-latest
-    networks:
-      - backend    
     environment:
       - ACCEPT_EULA=Y
       - SA_PASSWORD=password@12345#
     ports:
       - 8001:1433
+    networks:
+      - backend  
 
   auth.webapi:
     container_name: auth-api
@@ -54,5 +54,29 @@ services:
     ports:
       - 8005:1433
     networks:
-      - backend
+      - backend  
+
+  orderdb:
+    container_name: order-db
+    image: mongo
+    ports:
+      - 18005:27017
+    networks:
+      - backend 
+
+  order.webapi:
+    container_name: order-api
+    image: ${DOCKER_REGISTRY-}orderwebapi
+    build:
+      context: .
+      dockerfile: OnlineStore.OrderService/Order.WebApi/Dockerfile
+    networks:
+      - backend  
+
+  rabbitmq:
+    container_name: rabbitmq-MB
+    image: rabbitmq:3.13-management
+    ports:
+      - 5672:5672
+      - 15672:15672
 

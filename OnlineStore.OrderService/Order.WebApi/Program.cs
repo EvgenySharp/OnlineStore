@@ -1,4 +1,7 @@
 using FluentValidation.AspNetCore;
+using MassTransit;
+using MessageBroker.RabbitMq.Consumers;
+using MessageBroker.RabbitMq.Extensions;
 using Order.Application.Extensions;
 using Order.Infrastructure.Extensions;
 using Order.WebApi.Middlewares;
@@ -31,6 +34,8 @@ namespace Order.WebApi
             services.AddSwaggerGen();
 
             services.AddRouting(options => options.LowercaseUrls = true);
+
+            services.AddMessageBrokers(configuration);
 
             var app = builder.Build();
 

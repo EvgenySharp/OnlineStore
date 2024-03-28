@@ -59,6 +59,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Order.Infrastructure", "Onl
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Order.WebApi", "OnlineStore.OrderService\Order.WebApi\Order.WebApi.csproj", "{40322A88-FE4E-4E52-9AF9-AAF17C6F6A41}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "OnlineStore.MessageBrokers", "OnlineStore.MessageBrokers", "{4F1B30C8-8753-4F06-9F67-AD5BB75431CE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MessageBroker.RabbitMq", "MessageBroker.RabbitMq\MessageBroker.RabbitMq.csproj", "{28D01DD1-B0FE-4537-BD88-6D93448A96CF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -117,6 +121,10 @@ Global
 		{40322A88-FE4E-4E52-9AF9-AAF17C6F6A41}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{40322A88-FE4E-4E52-9AF9-AAF17C6F6A41}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{40322A88-FE4E-4E52-9AF9-AAF17C6F6A41}.Release|Any CPU.Build.0 = Release|Any CPU
+		{28D01DD1-B0FE-4537-BD88-6D93448A96CF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{28D01DD1-B0FE-4537-BD88-6D93448A96CF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{28D01DD1-B0FE-4537-BD88-6D93448A96CF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{28D01DD1-B0FE-4537-BD88-6D93448A96CF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -145,6 +153,7 @@ Global
 		{1FA4BC94-7127-448B-8E29-95246E8483F5} = {E3881D19-9E6B-40D0-8839-15BFCA108A1A}
 		{DB30025C-59A7-493F-BB6A-04829F7D0B35} = {46CF6450-A5CD-4B73-94F6-0E2C4D3E443A}
 		{40322A88-FE4E-4E52-9AF9-AAF17C6F6A41} = {6F1A48A2-323A-4135-8285-C2AFB707FAE2}
+		{28D01DD1-B0FE-4537-BD88-6D93448A96CF} = {4F1B30C8-8753-4F06-9F67-AD5BB75431CE}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {75FF7C6C-0B85-4E27-A8CD-83205A01EC40}
