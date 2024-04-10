@@ -1,9 +1,9 @@
 ## API resources
 
 For a list of the available resources, see
-[API resources](api_resources.md).
-[API resources](api_resources.md).
-[API resources](api_resources.md).
+[Auth API resources](AuthApi_resources.md),
+[Catalog API resources](CatalogApi_resources.md),
+[Orde API resources](OrderApi_resources.md).
 
 ## Basic usage
 
