@@ -1,5 +1,117 @@
 # Auth API
 
+## AuthController
+
+### Login user
+
+```
+POST /api/login
+```
+Example request:
+
+```json
+  {
+     "name": "UserName"
+     "password": "UserPass"
+  }
+```
+
+Example response:
+
+```json
+  {
+     "name": "UserName"
+     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
+     "role": "User"
+  }
+```
+
+```bash
+curl -X 'POST' \
+  'https://localhost:7019/api/login'
+```
+
+### Register user
+
+```
+POST /api/register
+```
+
+Example request:
+
+```json
+  {
+     "name": "UserName"
+     "password": "UserPass"
+     "confirmPassword": "UserPass"
+  }
+```
+
+Example response:
+
+```json
+  {
+     "name": "UserName"
+     "role": "UserPass"
+  }
+```
+
+```bash
+curl -X 'POST' \
+  'https://localhost:7019/api/register'
+```
+
+## RolesController
+
+### Create a new role
+
+```
+POST /api/roles
+```
+
+Example response:
+
+```json
+  {
+     "Name": "roleName"
+  }
+```
+
+```bash
+curl -X 'POST' \
+  'https://localhost:7019/api/roles'
+```
+
+### Gets the list of roles
+
+```
+GET /api/roles
+```
+
+Example response:
+
+```json
+  {
+     "Name": "roleName"
+  }
+```
+
+```bash
+curl -X 'POST' \
+  'https://localhost:7019/api/login'
+```
+
+
+
+
+
+
+## UsersController
+
+
+
+////////////////////////////////////////////////////////////////////////
+
 ## List books
 
 ### Get a list of all books
