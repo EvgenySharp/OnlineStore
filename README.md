@@ -12,25 +12,6 @@ Example of a valid API request using cURL:
 ```shell
 curl "/api/order/65fc754df1466cc0bab12003"
 ```
-  
-## Authentication
-
-All API requests require authentication except for the request to receive an authentication token.
-
-The authentication token can be obtained by making a request:
-
-```shell
-curl "https://localhost:7046/api/Book/token"
-```
-
-If authentication information is invalid or omitted, an error message will be
-returned with status code `401`:
-
-```json
-{
-  "message": "401 Unauthorized"
-}
-```
 
 ## Status codes
 
