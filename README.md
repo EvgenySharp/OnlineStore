@@ -10,7 +10,7 @@ API requests should be prefixed with `api`.
 Example of a valid API request using cURL:
 
 ```shell
-curl "https://localhost:7046/api/Book"
+curl "/api/order/65fc754df1466cc0bab12003"
 ```
   
 ## Authentication
