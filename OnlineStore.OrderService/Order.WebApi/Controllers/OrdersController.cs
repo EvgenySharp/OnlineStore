@@ -52,8 +52,8 @@ namespace Order.WebApi.Controllers
         {
             var order = await _orderService.СreateOrderAsync(roleRequestDto, cancellationToken);
 
-            var r = new OrderCreateEvent() { Id = order.Id };
-            await _publishEndpoint.Publish(r, cancellationToken);
+            var orderCreateEvent = new OrderCreateEvent() { Id = order.Id };
+            await _publishEndpoint.Publish(orderCreateEvent, cancellationToken);
 
             return Ok(order);
         }
