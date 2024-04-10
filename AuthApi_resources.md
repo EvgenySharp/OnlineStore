@@ -69,11 +69,19 @@ curl -X 'POST' \
 POST /api/roles
 ```
 
+Example request:
+
+```json
+  {
+     "Name": "User"
+  }
+```
+
 Example response:
 
 ```json
   {
-     "Name": "roleName"
+     "Name": "User"
   }
 ```
 
@@ -91,18 +99,58 @@ GET /api/roles
 Example response:
 
 ```json
+"books": [
   {
-     "Name": "roleName"
+     "Name": "User"
+  },
+  {
+     "Name": "Admin"
+  }
+]
+```
+
+```bash
+curl -X 'GET' \
+  'https://localhost:7019/api/roles'
+```
+
+### Get the role by name
+
+```
+GET /api/roles/[roleName]
+```
+
+| Parameters | Type    | Description           |
+| --------- | -------  | --------------------- |
+| `roleName`| String | The name of the role |
+
+Example response:
+
+```json
+  {
+     "Name": "User"
   }
 ```
 
 ```bash
-curl -X 'POST' \
-  'https://localhost:7019/api/login'
+curl -X 'GET' \
+  'https://localhost:7019/api/roles/User'
 ```
 
+### Delete the role
 
+```
+DELETE /api/roles/[roleName]
+```
 
+| Parameters | Type    | Description           |
+| --------- | -------  | --------------------- |
+| `roleName`| String | The name of the role |
+
+```bash
+curl -X 'DELETE' \
+  'https://localhost:7019/api/roles/User'
+```
 
 
 
