@@ -216,3 +216,39 @@ Example response:
 curl -X 'GET' \
   'https://localhost:7019/api/users/46b5821f-944d-48db-87f4-4664039ffb6c'
 ```
+
+### Change the user's password
+
+```
+PUT /api/users
+```
+
+Example request:
+
+```json
+  {
+     "name": "10",
+     "currentPassword": "4454",
+     "newPassword": "5483",
+  }
+```
+
+```bash
+curl -X 'PUT' \
+  'https://localhost:7019/api/users'
+```
+
+### Delete the user
+
+```
+DELETE /api/users/[id]
+```
+
+| Parameters | Type    | Description           |
+| --------- | -------  | --------------------- |
+| `id`| GUID | The id of the user |
+
+```bash
+curl -X 'DELETE' \
+  'https://localhost:7019/api/users/46b5821f-944d-48db-87f4-4664039ffb6c'
+```
