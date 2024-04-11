@@ -34,7 +34,7 @@ curl -X 'POST' \
 ### Gets the list of product
 
 ```
-GET /api/products/page?pageSize=[pageSize]&pageCount=[pageCount]
+POST /api/products/page?pageSize=[pageSize]&pageCount=[pageCount]
 ```
 
 | Parameters | Type    | Description           |
@@ -56,8 +56,8 @@ Example response:
 ```
 
 ```bash
-curl -X 'GET' \
-  'https://localhost:7292/api/page?pageSize=2&pageCount=1'
+curl -X 'POST' \
+  'https://localhost:7292/api/products/page?pageSize=2&pageCount=1'
 ```
 
 ### Get the product by id
@@ -159,35 +159,72 @@ curl -X 'PATCH' \
         ]
 ```
 
-### Delete the role
+### Change the produrt's manufacturer
 
 ```
-DELETE /api/roles/[roleName]
+PATCH   /api/products/manufacturers/[id]
 ```
 
 | Parameters | Type    | Description           |
 | --------- | -------  | --------------------- |
-| `roleName`| String | The name of the role |
+| `id`| GUID | The id of the product |
+
+Example request:
+
+```json
+[
+  {
+     "operationType": "0",
+     "path": "ManufacturerId",
+     "op": "replace",
+     "from": "string",
+     "value": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  }
+]
+```
+
+```bash
+curl -X 'PATCH' \
+  'https://localhost:7292/api/products/manufacturers/7200f6a3-132c-46c9-8b9f-27b9b3c2d122
+        [
+             {
+                 "operationType": 0,
+                 "path": "ManufacturerId",
+                 "op": "replace",
+                 "from": "string",
+                 "value": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+             }
+        ]
+```
+
+### Delete the role
+
+```
+DELETE /api/products/[id]
+```
+
+| Parameters | Type    | Description           |
+| --------- | -------  | --------------------- |
+| `id`| GUID | The id of the product |
 
 ```bash
 curl -X 'DELETE' \
   'https://localhost:7292/api/products/7200f6a3-132c-46c9-8b9f-27b9b3c2d122'
 ```
 
-## UsersController
+## CategoriesController
 
-### Gets the list of users
+### Create a new category
 
 ```
-POST /api/users
+POST /api/categories
 ```
 
 Example request:
 
 ```json
   {
-     "pageSize": "10",
-     "pageCount": "1",
+     "title": "CategoryTitle"
   }
 ```
 
@@ -195,82 +232,140 @@ Example response:
 
 ```json
   {
-  "roles": [
-    {
-       "Name": "User"
-    },
-    {
-       "Name": "Admin"
-    }
-  ],  
-     "totalUsersCount": "10",
-     "pageSize": "10",
-     "pageCount": "1",
+     "title": "CategoryTitle"
   }
 ```
 
 ```bash
 curl -X 'POST' \
-  'https://localhost:7019/api/users'
+  'https://localhost:7292/api/categories'
 ```
 
-### Get the user by id
+### Gets the list of category
 
 ```
-GET /api/users/[id]
+POST /api/categories/page?pageSize=[pageSize]&pageCount=[pageCount]
 ```
 
 | Parameters | Type    | Description           |
 | --------- | -------  | --------------------- |
-| `id`| GUID | The id of the user |
+| `pageSize`| int | The page size |
+| `pageCount`| int | The page count |
+
+Example response:
+
+```json
+"products": [
+    {
+       "title": "CategoryTitle"
+    },
+    {
+       "title": "CategoryTitle"
+    }
+  ]
+```
+
+```bash
+curl -X 'POST' \
+  'https://localhost:7292/api/categories/page?pageSize=2&pageCount=1'
+```
+
+### Gets the list of category
+
+```
+GET /api/categories
+```
+
+Example response:
+
+```json
+"products": [
+    {
+       "title": "CategoryTitle"
+    },
+    {
+       "title": "CategoryTitle"
+    }
+  ]
+```
+
+```bash
+curl -X 'GET' \
+  'https://localhost:7292/api/categories'
+```
+
+### Get the category by id
+
+```
+GET /api/categories/[id]
+```
+
+| Parameters | Type    | Description           |
+| --------- | -------  | --------------------- |
+| `id`| GUID | The id of the category |
 
 Example response:
 
 ```json
   {
-     "id": "46b5821f-944d-48db-87f4-4664039ffb6c",
-     "name": "UserName",
-     "role": "User",
+     "title": "CategoryTitle"
   }
 ```
 
 ```bash
 curl -X 'GET' \
-  'https://localhost:7019/api/users/46b5821f-944d-48db-87f4-4664039ffb6c'
+  'https://localhost:7292/api/categories/7200f6a3-132c-46c9-8b9f-27b9b3c2d122'
 ```
 
-### Change the user's password
+### Change the category's title
 
 ```
-PUT /api/users
-```
-
-Example request:
-
-```json
-  {
-     "name": "10",
-     "currentPassword": "4454",
-     "newPassword": "5483",
-  }
-```
-
-```bash
-curl -X 'PUT' \
-  'https://localhost:7019/api/users'
-```
-
-### Delete the user
-
-```
-DELETE /api/users/[id]
+PATCH   /api/products/categories/[id]
 ```
 
 | Parameters | Type    | Description           |
 | --------- | -------  | --------------------- |
-| `id`| GUID | The id of the user |
+| `id`| GUID | The id of the category |
+
+Example request:
+
+```json
+[
+  {
+     "operationType": "0",
+     "path": "Title",
+     "op": "replace",
+     "from": "string",
+     "value": "NewTitle",
+  }
+]
+```
+
+```bash
+curl -X 'PATCH' \
+  'https://localhost:7292/api/categories/7200f6a3-132c-46c9-8b9f-27b9b3c2d122
+        [
+             {
+                 "operationType": 0,
+                 "path": "Title",
+                 "op": "replace",
+                 "from": "string",
+                 "value": "NewTitle"
+             }
+        ]
+```
+
+### Delete the category
+
+```
+DELETE /api/category/[id]
+```
+
+| Parameters | Type    | Description           |
+| --------- | -------  | --------------------- |
+| `id`| GUID | The id of the category |
 
 ```bash
 curl -X 'DELETE' \
-  'https://localhost:7019/api/users/46b5821f-944d-48db-87f4-4664039ffb6c'
+  'https://localhost:7292/api/categories/7200f6a3-132c-46c9-8b9f-27b9b3c2d122'
 ```
