@@ -1,6 +1,6 @@
 # Catalog API
 
-## ProductsController
+## Products controller
 
 ### Create a new product
 
@@ -212,7 +212,7 @@ curl -X 'DELETE' \
   'https://localhost:7292/api/products/7200f6a3-132c-46c9-8b9f-27b9b3c2d122'
 ```
 
-## CategoriesController
+## Categories controller
 
 ### Create a new category
 
@@ -368,4 +368,162 @@ DELETE /api/category/[id]
 ```bash
 curl -X 'DELETE' \
   'https://localhost:7292/api/categories/7200f6a3-132c-46c9-8b9f-27b9b3c2d122'
+```
+
+## Manufacturers controller
+
+### Create a new manufacturer
+
+```
+POST /api/manufacturers
+```
+
+Example request:
+
+```json
+  {
+     "title": "ManufacturerTitle"
+  }
+```
+
+Example response:
+
+```json
+  {
+     "title": "ManufacturerTitle"
+  }
+```
+
+```bash
+curl -X 'POST' \
+  'https://localhost:7292/api/manufacturers'
+```
+
+### Gets the list of category (by page)
+
+```
+POST /api/manufacturers/page?pageSize=[pageSize]&pageCount=[pageCount]
+```
+
+| Parameters | Type    | Description           |
+| --------- | -------  | --------------------- |
+| `pageSize`| int | The page size |
+| `pageCount`| int | The page count |
+
+Example response:
+
+```json
+"products": [
+    {
+       "title": "ManufacturerTitle"
+    },
+    {
+       "title": "ManufacturerTitle"
+    }
+  ]
+```
+
+```bash
+curl -X 'POST' \
+  'https://localhost:7292/api/manufacturers/page?pageSize=2&pageCount=1'
+```
+
+### Gets the list of manufacturer
+
+```
+GET /api/manufacturers
+```
+
+Example response:
+
+```json
+"products": [
+    {
+       "title": "ManufacturerTitle"
+    },
+    {
+       "title": "ManufacturerTitle"
+    }
+  ]
+```
+
+```bash
+curl -X 'GET' \
+  'https://localhost:7292/api/manufacturers'
+```
+
+### Get the manufacturer by id
+
+```
+GET /api/manufacturers/[id]
+```
+
+| Parameters | Type    | Description           |
+| --------- | -------  | --------------------- |
+| `id`| GUID | The id of the manufacturers |
+
+Example response:
+
+```json
+  {
+     "title": "ManufacturerTitle"
+  }
+```
+
+```bash
+curl -X 'GET' \
+  'https://localhost:7292/api/manufacturers/7200f6a3-132c-46c9-8b9f-27b9b3c2d122'
+```
+
+### Change the manufacturer's title
+
+```
+PATCH   /api/products/manufacturers/[id]
+```
+
+| Parameters | Type    | Description           |
+| --------- | -------  | --------------------- |
+| `id`| GUID | The id of the manufacturers |
+
+Example request:
+
+```json
+[
+  {
+     "operationType": "0",
+     "path": "Title",
+     "op": "replace",
+     "from": "string",
+     "value": "NewTitle",
+  }
+]
+```
+
+```bash
+curl -X 'PATCH' \
+  'https://localhost:7292/api/manufacturers/7200f6a3-132c-46c9-8b9f-27b9b3c2d122
+        [
+             {
+                 "operationType": 0,
+                 "path": "Title",
+                 "op": "replace",
+                 "from": "string",
+                 "value": "NewTitle"
+             }
+        ]
+```
+
+### Delete the manufacturers
+
+```
+DELETE /api/manufacturers/[id]
+```
+
+| Parameters | Type    | Description           |
+| --------- | -------  | --------------------- |
+| `id`| GUID | The id of the manufacturers |
+
+```bash
+curl -X 'DELETE' \
+  'https://localhost:7292/api/manufacturers/7200f6a3-132c-46c9-8b9f-27b9b3c2d122'
 ```
