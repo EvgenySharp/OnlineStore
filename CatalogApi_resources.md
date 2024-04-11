@@ -241,7 +241,7 @@ curl -X 'POST' \
   'https://localhost:7292/api/categories'
 ```
 
-### Gets the list of category
+### Gets the list of category (by page)
 
 ```
 POST /api/categories/page?pageSize=[pageSize]&pageCount=[pageCount]
