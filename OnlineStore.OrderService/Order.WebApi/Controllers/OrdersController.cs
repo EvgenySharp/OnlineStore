@@ -1,6 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using MassTransit;
+using MessageBroker.RabbitMq.Events;
+using Microsoft.AspNetCore.Mvc;
 using Order.Application.Abstractions.Interfaces;
 using Order.Application.DTOs.RequestDtos.Orders;
+using System.Transactions;
 
 namespace Order.WebApi.Controllers
 {
@@ -9,10 +12,14 @@ namespace Order.WebApi.Controllers
     public class OrdersController : ControllerBase
     {
         private readonly IOrderService _orderService;
+        private readonly IPublishEndpoint _publishEndpoint;
 
-        public OrdersController(IOrderService orderService)
+        public OrdersController(
+            IOrderService orderService,
+            IPublishEndpoint publishEndpoint)
         {
             _orderService = orderService;
+            _publishEndpoint = publishEndpoint;
         }
 
         /// <summary>
@@ -44,6 +51,9 @@ namespace Order.WebApi.Controllers
         public async Task<IActionResult> CreateAsync([FromBody] CreateOrderRequestDto roleRequestDto, CancellationToken cancellationToken)
         {
             var order = await _orderService.СreateOrderAsync(roleRequestDto, cancellationToken);
+
+            var orderCreateEvent = new OrderCreateEvent() { Id = order.Id };
+            await _publishEndpoint.Publish(orderCreateEvent, cancellationToken);
 
             return Ok(order);
         }
